@@ -4,7 +4,20 @@ class Circle {
         this.xhigh = xhigh;
         this.ylow = ylow;
         this.yhigh = yhigh;
-        this.color = [Math.random(), Math.random(), Math.random(), 1]
+        const customColors = [
+            [.558,.269,.91,1], //purpleish
+            [.262,.856,.527,1], //greenish
+            [.984,.703,.0195,1], //mustard
+            [.0312,.5859,.8085,1], //cool blue gatorade
+            [.214,.703,.625,1], //arctic
+            [.7265,.109,.1289,1], //blood
+            [.542,.757,.855,1], //cavalry blue
+            [.984,.737,.016,1], //google yellow
+            [.051,.396,.176,1], //google green
+            [.647,.055,.055,1], //google red
+            [.090,.306,.651,1], //google blue
+        ]
+        this.color = customColors[Math.floor(Math.random() * customColors.length)];
         this.size = 1.0 + Math.random(); // half edge between 1.0 and 2.0
         const minx = xlow+this.size;
         const maxx = xhigh-this.size;
@@ -13,13 +26,23 @@ class Circle {
         const maxy = yhigh-this.size;
         this.y = miny + Math.random()*(maxy-miny);
         this.degrees = Math.random()*90;
-        this.dx = (Math.random() - 0.5) * 10; 
-        this.dy = (Math.random() - 0.5) * 10;
+        this.dx = (Math.random() - 0.5) * 100; 
+        this.dy = (Math.random() - 0.5) * 100;
     }
     update(DT){
+        const gravity = -9.815;
+        this.dy += gravity * DT;
+
+        const airFriction = 0.99
+        this.dx *= airFriction;
+        this.dy *= airFriction;
+
+        this.x += this.dx * DT;
+        this.y += this.dy * DT;
+        
         const degreesPerSecond = 45;
         this.degrees += degreesPerSecond*DT;
-        this.degrees = 0.0; 
+        this.degrees = 0.0;
 
         if(this.x+this.dx*DT +this.size > this.xhigh){
             this.dx = -Math.abs(this.dx);
@@ -43,8 +66,8 @@ class Circle {
 }
 
 function drawCircle(gl, shaderProgram, color, degrees, x, y, size) {
-    const numSegments = 100; // Increase this for a smoother circle
-    const vertices = [0, 0]; // Center of the circle
+    const numSegments = 100; 
+    const vertices = [0, 0]; 
     for (let i = 0; i <= numSegments; i++) {
         const theta = (i / numSegments) * 2 * Math.PI;
         vertices.push(Math.cos(theta), Math.sin(theta));

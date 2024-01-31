@@ -1,5 +1,6 @@
 import { Circle } from "./circle.js";
-import {initShaderProgram} from "./shader.js";
+import { initShaderProgram } from "./shader.js";
+import { collideParticles } from './collisions.js';
 
 main();
 async function main() {
@@ -68,6 +69,32 @@ async function main() {
 	
 		// Clear the canvas before we start drawing on it.
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+		const collisionFriction = 0.85;
+		for (let i = 0; i < NUM_CIRCLES - 1; i++) {
+            for (let j = i + 1; j < NUM_CIRCLES; j++) {
+                let circle1 = circleList[i];
+                let circle2 = circleList[j];
+
+                const dx = circle2.x - circle1.x;
+                const dy = circle2.y - circle1.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const minDistance = circle1.size + circle2.size;
+
+                if (distance < minDistance) {
+                    // Circles are colliding
+                    collideParticles(circle1, circle2, DT, collisionFriction);
+
+                    const overlap = minDistance - distance;
+                    const separationX = (overlap / 2) * (dx / distance);
+                    const separationY = (overlap / 2) * (dy / distance);
+                    circle1.x -= separationX;
+                    circle1.y -= separationY;
+                    circle2.x += separationX;
+                    circle2.y += separationY;
+                }
+            }
+        }
 
 		// Update the scene
 		for (let i = 0; i < NUM_CIRCLES; i++) {
