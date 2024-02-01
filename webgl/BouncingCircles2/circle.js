@@ -26,8 +26,8 @@ class Circle {
         const maxy = yhigh-this.size;
         this.y = miny + Math.random()*(maxy-miny);
         this.degrees = Math.random()*90;
-        this.dx = (Math.random() - 0.5) * 100; 
-        this.dy = (Math.random() - 0.5) * 100;
+        this.dx = (Math.random() - 0.5) * 10; 
+        this.dy = (Math.random() - 0.5) * 10;
     }
     update(DT){
         const gravity = -9.815;
