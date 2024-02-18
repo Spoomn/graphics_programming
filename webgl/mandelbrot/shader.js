@@ -6,6 +6,10 @@ function initShaderProgram(gl, vsSource, fsSource) {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
+  if (vertexShader === null || fragmentShader === null) {
+    console.error('Shader compilation failed, cannot initialize shader program.');
+    return null;
+  }
   // Combine the two shaders into a shader program
   const shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertexShader);

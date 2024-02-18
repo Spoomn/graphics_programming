@@ -28,7 +28,6 @@ async function main() {
 	// load a projection matrix onto the shader
 	// 
 	const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
-	const aspect = canvas.clientWidth / canvas.clientHeight;
 	const projectionMatrix = mat4.create();
 	let yhigh = 1.5;
 	let ylow = -1.5;
@@ -37,7 +36,11 @@ async function main() {
 	mat4.ortho(projectionMatrix, xlow, xhigh, ylow, yhigh, -1, 1);
 	gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
 
-
+	// variables for dragging
+	let isDragging = false;
+	let lastPosX = 0;
+	let lastPosY = 0;
+	
 	//
 	// Register Listeners
 	//
@@ -49,13 +52,78 @@ async function main() {
 		// Do whatever you want here, in World Coordinates.
 	}
 	addEventListener("mousewheel", mouseWheel);
+	const zoomDelta = 0.1
 	function mouseWheel(event) {
-		console.log("wheelie");
-		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow);
-		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow);
-		// Do whatever you want here, in World Coordinates.
+		console.log("zoomie zoom");
+		const zoomDirection = event.deltaY > 0 ? 1 : -1; // this tells whether we are scrolling in or out
+		const zoomFactor = 1 + zoomDirection * zoomDelta; // this takes the direction and applies a zoom factor
+		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow); // location of mouse x
+		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow); //location of mouse y
+		const newXRange = (xhigh - xlow) * zoomFactor; // recalculate x range based on zoom factor
+		const newYRange = (yhigh - ylow) * zoomFactor; // recalculate y range based on zoom factor
+		xlow = xWorld - (xWorld - xlow) * zoomFactor; // new window parameters
+		xhigh = xlow + newXRange;
+		ylow = yWorld - (yWorld - ylow) * zoomFactor;
+		yhigh = ylow + newYRange;
+		mat4.ortho(projectionMatrix, xlow, xhigh, ylow, yhigh, -1, 1);
+		gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
+		requestAnimationFrame(redraw);
 	}
+	let colorMode = 0;
 
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'c') {
+			colorMode = 1 - colorMode;
+			updateColorModeUniform();
+		}
+	});
+	canvas.addEventListener('mousedown', (event) => {
+		isDragging = true;
+		lastPosX = event.clientX;
+		lastPosY = event.clientY;
+	});
+	
+	canvas.addEventListener('mousemove', (event) => {
+		if (isDragging) {
+			const deltaX = event.clientX - lastPosX;
+			const deltaY = event.clientY - lastPosY;
+			lastPosX = event.clientX;
+			lastPosY = event.clientY;
+	
+			updateView(deltaX, deltaY);
+		}
+	});
+	
+	canvas.addEventListener('mouseup', () => {
+		isDragging = false;
+	});
+	
+	canvas.addEventListener('mouseleave', () => {
+		isDragging = false;
+	});
+
+	function updateView(deltaX, deltaY) {
+		const worldDeltaX = (deltaX / canvas.width) * (xhigh - xlow);
+		const worldDeltaY = (deltaY / canvas.height) * (yhigh - ylow);
+	
+		xlow -= worldDeltaX;
+		xhigh -= worldDeltaX;
+		ylow += worldDeltaY;
+		yhigh += worldDeltaY;
+	
+		mat4.ortho(projectionMatrix, xlow, xhigh, ylow, yhigh, -1, 1);
+		gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
+	
+		requestAnimationFrame(redraw);
+	}
+	
+	
+	function updateColorModeUniform() {
+		const colorModeLocation = gl.getUniformLocation(shaderProgram, 'colorMode');
+		gl.uniform1i(colorModeLocation, colorMode);
+		// Trigger a redraw of your scene here, if necessary
+	}
+	
 	//
 	// Main render loop
 	//
