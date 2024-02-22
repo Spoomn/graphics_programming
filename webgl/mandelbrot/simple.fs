@@ -3,13 +3,12 @@ precision highp float;
 varying vec2 fragPosition;
 
 const int MAX_ITER = 1000;
-uniform int colorMode; // 0 for predetermined colors, 1 for random colors
+uniform int colorMode;
 
 vec3 getPredeterminedColor(int count) {
     if (count == MAX_ITER) {
         return vec3(0.0, 0.0, 0.0); //black inside
     } else {
-        // Map count to one of the provided colors
         float normalized = float(count) / float(MAX_ITER);
         if (normalized < 0.1) return vec3(0.262, 0.856, 0.527); // greenish
         else if (normalized < 0.2) return vec3(0.558, 0.269, 0.91); // purpleish
@@ -53,7 +52,6 @@ int MandelbrotTest(float cr, float ci)
       zrsqr = zr * zr;
       zisqr = zi * zi;
 		
-      //the fewer iterations it takes to diverge, the farther from the set
       if (zrsqr + zisqr > 4.0) 
         break;
       count++;

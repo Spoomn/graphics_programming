@@ -121,7 +121,7 @@ async function main() {
 	function updateColorModeUniform() {
 		const colorModeLocation = gl.getUniformLocation(shaderProgram, 'colorMode');
 		gl.uniform1i(colorModeLocation, colorMode);
-		// Trigger a redraw of your scene here, if necessary
+		requestAnimationFrame(redraw);
 	}
 	
 	//
@@ -139,7 +139,6 @@ async function main() {
 
 		drawRectangle(gl, shaderProgram, xlow,ylow,xhigh,yhigh, [1,0,0,1]);
 		
-		requestAnimationFrame(redraw);
 	}
 	requestAnimationFrame(redraw);
 };
