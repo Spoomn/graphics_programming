@@ -2,6 +2,7 @@ import { initShaderProgram } from "./shader.js";
 import { drawCircle, drawRectangle, drawTriangle, drawLineStrip, drawLine } from "./shapes2d.js";
 import { randomDouble } from "./random.js";
 import {Maze} from "./maze.js"
+import {Rat} from "./rat.js"
 
 main();
 async function main() {
@@ -27,9 +28,10 @@ async function main() {
 	//
 	// Create content to display
 	//
-	const WIDTH = 32;
+	const WIDTH = 5;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
+	const rat = new Rat(.5,.5, 90)
 
 	//
 	// load a projection matrix onto the shader
@@ -74,10 +76,8 @@ async function main() {
 	// load a modelview matrix onto the shader
 	// 
 	const modelViewMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
-	const modelViewMatrix = mat4.create();
-    gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, modelViewMatrix);
-
-
+	const identityMatrix = mat4.create();
+    gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix);
 
 	//
 	// Register Listeners
@@ -88,8 +88,30 @@ async function main() {
 		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow);
 		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow);
 		// Do whatever you want here, in World Coordinates.
+		
 	}
 
+	let spinLeft = false;
+	let scurryForward = false;
+
+	window.addEventListener("keydown", keyDown);
+	function keyDown(event){
+		if (event.code == 'KeyQ'){
+			spinLeft = true;
+		}
+		if (event.code == 'KeyW'){
+			scurryForward = true;
+		}
+	}
+	window.addEventListener("keyup", keyUp);
+	function keyUp(event){
+		if (event.code == 'KeyQ'){
+			spinLeft = false;
+		}
+		if (event.code == 'KeyW'){
+			scurryForward = false;
+		}
+	}
 	//
 	// Main render loop
 	//
@@ -103,9 +125,18 @@ async function main() {
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		m.draw(gl, shaderProgram, WIDTH, HEIGHT)
+		if (spinLeft){
+			rat.spinLeft(DT);
+		}
+		if (scurryForward){
+			rat.scurryForward(DT);
+		}
+
+		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
+		m.draw(gl, shaderProgram)
 		// m.drawPath(gl, shaderProgram)
-		
+		rat.draw(gl, shaderProgram)
+		requestAnimationFrame(redraw);
 	}
 	requestAnimationFrame(redraw);
 };

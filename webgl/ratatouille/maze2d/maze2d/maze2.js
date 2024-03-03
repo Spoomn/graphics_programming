@@ -1,4 +1,4 @@
-import { drawLine } from "./shapes2d.js";
+import { drawLine, drawLineStrip} from "./shapes2d.js";
 
 class Cell{
     constructor(){
@@ -32,6 +32,7 @@ class Maze {
         this.width = width;
         this.height = height;
         this.cells = [];
+        this.path = [];
         this.stack = [];
         for (let r = 0; r < height; r++) {
             this.cells.push([]);
@@ -39,11 +40,21 @@ class Maze {
                 this.cells[r].push(new Cell());
             }
         }
+
         this.cells[0][0].bottom = false;
         this.RemoveWalls(0,0);
-        this.cells[height - 1][width - 1].top = false;
-    }
         
+        this.cells[height - 1][width - 1].top = false;
+    
+        // this.path = [];
+        // for (let r = 0; r < height; r++) {
+        //     this.cells.push([]);
+        //     for (let c = 0; c < width; c++) {
+        //         this.cells[r].push(new Cell());
+        //     }
+    }
+    
+
     RemoveWalls(r, c) {
         this.cells[r][c].visited = true;
         const left = 0;
@@ -65,11 +76,16 @@ class Maze {
         if (r < this.height - 1 && !this.cells[r + 1][c].visited) {
             possibilities.push(top);
         }
-
+        const backtrackChance = 1;
+        const backtrackDepth = 5;
         while (possibilities.length > 0) {
             const randomIndex = Math.floor(Math.random() * possibilities.length);
             const direction = possibilities.splice(randomIndex, 1)[0];
-    
+            if (Math.random() < backtrackChance && this.stack.length > 1) {
+                const backSteps = Math.floor(Math.random() * backtrackDepth);
+                const cellToRevisit = this.stack[this.stack.length - 1 - backSteps];
+                this.RemoveWalls(cellToRevisit.r, cellToRevisit.c);
+            }
             let nextR = r;
             let nextC = c;
             if (direction === 0) nextC--;
@@ -104,8 +120,22 @@ class Maze {
             this.RemoveWalls(lastCell.r, lastCell.c);
         }
     }
-    
 
+    // drawSolutionPath(gl, shaderProgram) {
+    //     const path = [];
+    //     this.FindPath(0, 0, path); // Finds the path and fills the 'path' array
+    
+    //     const vertices = path.map(cell => {
+    //         // Convert cell coordinates to drawing coordinates
+    //         // You might need to adjust this based on how your coordinate system is set up for drawing
+    //         const x = cell.c + 0.5; // Center of cell
+    //         const y = cell.r + 0.5; // Center of cell
+    //         return [x, y];
+    //     }).flat(); // Flatten the array if your drawLineStrip expects a flat array of [x1, y1, x2, y2, ...]
+    
+    //     drawLineStrip(gl, shaderProgram, vertices, [1, 0, 0, 1]); // Example color: red
+    // }
+    
     draw(gl, shaderProgram, width, height) {
         for (let r = 0; r < height; r++) {
             for (let c = 0; c < width; c++) {

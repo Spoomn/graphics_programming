@@ -51,17 +51,18 @@ async function main() {
 		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow);
 		// Do whatever you want here, in World Coordinates.
 	}
+	
 	addEventListener("mousewheel", mouseWheel);
 	const zoomDelta = 0.1
 	function mouseWheel(event) {
 		console.log("zoomie zoom");
-		const zoomDirection = event.deltaY > 0 ? 1 : -1; // this tells whether we are scrolling in or out
-		const zoomFactor = 1 + zoomDirection * zoomDelta; // this takes the direction and applies a zoom factor
-		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow); // location of mouse x
-		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow); //location of mouse y
-		const newXRange = (xhigh - xlow) * zoomFactor; // recalculate x range based on zoom factor
-		const newYRange = (yhigh - ylow) * zoomFactor; // recalculate y range based on zoom factor
-		xlow = xWorld - (xWorld - xlow) * zoomFactor; // new window parameters
+		const zoomDirection = event.deltaY > 0 ? 1 : -1;
+		const zoomFactor = 1 + zoomDirection * zoomDelta; 
+		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow); 
+		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow); 
+		const newXRange = (xhigh - xlow) * zoomFactor; 
+		const newYRange = (yhigh - ylow) * zoomFactor; 
+		xlow = xWorld - (xWorld - xlow) * zoomFactor; 
 		xhigh = xlow + newXRange;
 		ylow = yWorld - (yWorld - ylow) * zoomFactor;
 		yhigh = ylow + newYRange;
