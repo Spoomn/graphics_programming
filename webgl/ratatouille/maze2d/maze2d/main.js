@@ -1,12 +1,12 @@
 import { initShaderProgram } from "./shader.js";
-import { drawCircle, drawRectangle, drawTriangle, drawLineStrip, drawLine } from "./shapes2d.js";
+import { drawCircle, drawRectangle, drawTriangle, drawLineStrip } from "./shapes2d.js";
 import { randomDouble } from "./random.js";
 import {Maze} from "./maze.js"
 import {Rat} from "./rat.js"
 
 main();
 async function main() {
-	console.log('This is working');
+	// console.log('This is working');
 
 	//
 	// start gl
@@ -28,7 +28,7 @@ async function main() {
 	//
 	// Create content to display
 	//
-	const WIDTH = 5;
+	const WIDTH = 8;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
 	const rat = new Rat(.5,.5, 90)
@@ -36,9 +36,7 @@ async function main() {
 	//
 	// load a projection matrix onto the shader
 	// 
-	const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
-	const aspect = canvas.clientWidth / canvas.clientHeight;
-	const projectionMatrix = mat4.create();
+
 	const margin = 0.5;
 
 	let xlow = 0.0-margin;
@@ -46,17 +44,20 @@ async function main() {
 	let ylow = 0.0-margin;
 	let yhigh = HEIGHT+margin;
 
-	squareWorld()
-	window.addEventListener('resize', squareWorld)
+	squareWorld();
+	window.addEventListener('resize', squareWorld);
 
 
 	function squareWorld(){
+		const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+		const projectionMatrix = mat4.create();
+		const aspect = canvas.clientWidth / canvas.clientHeight;
 		const width = xhigh - xlow;
 		const height = yhigh - ylow;
 		if(aspect >= width/height){
 			const newWidth = aspect*height;
 			const xmid = (xlow+xhigh)/2;
-			const xlowNew = xmid - newWidth /2;
+			const xlowNew = xmid - newWidth/2;
 			const xhighNew = xmid + newWidth/2;
 			mat4.ortho(projectionMatrix, xlowNew, xhighNew, ylow, yhigh, -1, 1) 
 
@@ -68,7 +69,6 @@ async function main() {
 			mat4.ortho(projectionMatrix, xlow, xhigh, ylowNew, yhighNew, -1, 1) 
 		}
 
-		mat4.ortho(projectionMatrix, xlow, xhigh, ylow, yhigh, -1, 1);
 		gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
 	}
 
@@ -88,19 +88,38 @@ async function main() {
 		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow);
 		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow);
 		// Do whatever you want here, in World Coordinates.
-		
 	}
 
 	let spinLeft = false;
+	let spinRight = false;
 	let scurryForward = false;
+	let scurryBackward = false;
+	let strafeLeft = false;
+	let strafeRight = false;
+	let solution = false;
 
 	window.addEventListener("keydown", keyDown);
 	function keyDown(event){
 		if (event.code == 'KeyQ'){
 			spinLeft = true;
 		}
+		if (event.code == 'KeyE'){
+			spinRight = true;
+		}
 		if (event.code == 'KeyW'){
 			scurryForward = true;
+		}
+		if (event.code == 'KeyS'){
+			scurryBackward = true;
+		}
+		if (event.code == "KeyA"){
+			strafeLeft = true
+		}
+		if (event.code == "KeyD"){
+			strafeRight = true
+		}
+		if (event.code == "KeyH"){
+			solution = true;
 		}
 	}
 	window.addEventListener("keyup", keyUp);
@@ -108,8 +127,23 @@ async function main() {
 		if (event.code == 'KeyQ'){
 			spinLeft = false;
 		}
+		if (event.code == 'KeyE'){
+			spinRight = false;
+		}
 		if (event.code == 'KeyW'){
 			scurryForward = false;
+		}
+		if (event.code == 'KeyS'){
+			scurryBackward = false;
+		}
+		if (event.code == "KeyA"){
+			strafeLeft = false
+		}
+		if (event.code == "KeyD"){
+			strafeRight = false
+		}
+		if (event.code == "KeyH"){
+			solution = false;
 		}
 	}
 	//
@@ -128,16 +162,32 @@ async function main() {
 		if (spinLeft){
 			rat.spinLeft(DT);
 		}
+		if (spinRight){
+			rat.spinRight(DT);
+		}
 		if (scurryForward){
 			rat.scurryForward(DT);
 		}
+		if (scurryBackward){
+			rat.scurryBackward(DT);
+		}
+		if (strafeLeft){
+			rat.strafeLeft(DT);
+		}
+		if (strafeRight){
+			rat.strafeRight(DT);
+		}
+		
 
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
 		m.draw(gl, shaderProgram)
-		// m.drawPath(gl, shaderProgram)
+		if (solution){
+			m.drawPath(gl, shaderProgram)
+		}
 		rat.draw(gl, shaderProgram)
+		
+
 		requestAnimationFrame(redraw);
 	}
 	requestAnimationFrame(redraw);
 };
-

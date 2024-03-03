@@ -1,4 +1,4 @@
-import { drawLine } from "./shapes2d.js";
+import {drawLines, drawLineStrip} from "./shapes2d.js";
 
 class Cell{
     constructor(){
@@ -8,111 +8,152 @@ class Cell{
         this.top = true;
         this.visited = false;
     }
+    
     draw(gl, shaderProgram, x, y){
-        const verticies = []
-        if (this.left){
-            verticies.push(x, y, x, y+1);
+        const vertices = [];
+
+        if(this.left){
+            vertices.push(x,y, x,y+1);
         }
-        if (this.right){
-            verticies.push(x+1, y, x+1, y+1);
+        if(this.bottom){
+            vertices.push(x,y, x+1,y);
         }
-        if (this.bottom){
-            verticies.push(x, y, x+1, y);
+        if(this.right){
+            vertices.push(x+1,y, x+1,y+1);
         }
-        if (this.top){
-            verticies.push(x, y+1, x+1, y+1);
+        if(this.top){
+            vertices.push(x,y+1, x+1,y+1);
         }
 
-        drawLine(gl, shaderProgram, verticies)
+        drawLines(gl, shaderProgram, vertices, [0,0,0, 1]);
     }
 }
 
-class Maze {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
+class Maze{
+    constructor(WIDTH, HEIGHT){
+        this.WIDTH = WIDTH;
+        this.HEIGHT = HEIGHT;
         this.cells = [];
-        this.stack = [];
-        for (let r = 0; r < height; r++) {
+        for(let r=0; r<HEIGHT; r++){
             this.cells.push([]);
-            for (let c = 0; c < width; c++) {
+            for(let c=0; c<WIDTH; c++){
                 this.cells[r].push(new Cell());
             }
         }
-        this.cells[0][0].bottom = false;
-        this.RemoveWalls(0,0);
-        this.cells[height - 1][width - 1].top = false;
-    }
-        
-    RemoveWalls(r, c) {
-        this.cells[r][c].visited = true;
-        const left = 0;
-        const bottom = 1;
-        const right = 2;
-        const top = 3;
+        this.removeWalls(0,0);
 
-        // Find all the directions we could go
-        const possibilities = [];
-        if (c > 0 && !this.cells[r][c - 1].visited) {
-            possibilities.push(left);
-        }
-        if (r > 0 && !this.cells[r - 1][c].visited) {
-            possibilities.push(bottom);
-        }
-        if (c < this.width - 1 && !this.cells[r][c + 1].visited) {
-            possibilities.push(right);
-        }
-        if (r < this.height - 1 && !this.cells[r + 1][c].visited) {
-            possibilities.push(top);
-        }
-
-        while (possibilities.length > 0) {
-            const randomIndex = Math.floor(Math.random() * possibilities.length);
-            const direction = possibilities.splice(randomIndex, 1)[0];
-    
-            let nextR = r;
-            let nextC = c;
-            if (direction === 0) nextC--;
-            else if (direction === 1) nextR--;
-            else if (direction === 2) nextC++;
-            else if (direction === 3) nextR++;
-    
-            if (this.cells[nextR][nextC] && !this.cells[nextR][nextC].visited) {
-                if (direction === 0) { 
-                    this.cells[r][c].left = false; 
-                    this.cells[nextR][nextC].right = false; 
-                }
-                else if (direction === 1) { 
-                    this.cells[r][c].bottom = false; 
-                    this.cells[nextR][nextC].top = false; 
-                }
-                else if (direction === 2) { 
-                    this.cells[r][c].right = false; 
-                    this.cells[nextR][nextC].left = false; 
-                }
-                else if (direction === 3) { 
-                    this.cells[r][c].top = false; 
-                    this.cells[nextR][nextC].bottom = false; 
-                }
-                this.stack.push({r: r, c: c});
-                this.RemoveWalls(nextR, nextC);
+        this.path= [];
+        for(let r=0; r<this.HEIGHT; r++){
+            for(let c=0; c<this.WIDTH; c++){
+                this.cells[r][c].visited = false;
             }
         }
-    
-        if (possibilities.length === 0 && this.stack.length > 0) {
-            const lastCell = this.stack.pop();
-            this.RemoveWalls(lastCell.r, lastCell.c);
+        this.findPath(0,0);
+    }
+
+    findPath(c,r){
+        this.cells[r][c].visited = true;
+        this.path.push(c+.5,r+.5);
+        if(c==this.WIDTH-1 && r==this.HEIGHT-1){ // the top right cell is the solution
+            return true; // this cell is the solution
+        }
+
+        // move left if there is no wall, and it hasn't been visited. Return true if it returns true.
+        if (!this.cells[r][c].left && !this.cells[r][c-1].visited){
+            if (this.findPath(c-1,r)){
+                return true; // this cell leads to the solution
+            }
+        }
+
+        // Same for right, top, and bottom:
+        if (!this.cells[r][c].right && !this.cells[r][c+1].visited){
+            if (this.findPath(c+1,r)){
+                return true;
+            }
+        }
+        if (!this.cells[r][c].top && !this.cells[r+1][c].visited){
+            if (this.findPath(c,r+1)){
+                return true;
+            }
+        }
+        if (!this.cells[r][c].bottom && !this.cells[r-1][c].visited){
+            if (this.findPath(c,r-1)){
+                return true;
+            }
+        }
+
+        // This is a loser cell, so undo the move from this.path, and return false to the previous cell.
+        this.path.pop();
+        this.path.pop();
+        return false;
+    }
+
+    drawPath(gl, shaderProgram){
+        drawLineStrip(gl, shaderProgram, this.path, [1,0,1,1]);
+    }
+
+    removeWalls(c,r){
+        this.cells[r][c].visited = true;
+        const LEFT = 0;
+        const BOTTOM = 1;
+        const RIGHT = 2;
+        const TOP = 3;
+        while(true){
+            // which directions are possible from the current cell?
+            const available = []; 
+            if(c>0 && this.cells[r][c-1].visited==false){
+                available.push(LEFT);
+            }
+            if(c<this.WIDTH-1 && this.cells[r][c+1].visited == false){
+                available.push(RIGHT);
+            }
+            if(r>0 && this.cells[r-1][c].visited==false){
+                available.push(BOTTOM);
+            }
+            if(r<this.HEIGHT-1 && this.cells[r+1][c].visited == false){
+                available.push(TOP);
+            }
+
+            // if we can't go forwards, go backwards.
+            if (available.length == 0){
+                return;
+            }
+
+            // randomly choose between the available directions, and go there.
+            const random = Math.floor(Math.random()*available.length);
+            const direction = available[random];
+
+            if(direction==LEFT){
+                this.cells[r][c].left = false; // remove my left wall
+                this.cells[r][c-1].right = false; // remove the cell to the left's right wall
+                this.removeWalls(c-1,r); // recurse left
+            }            
+            if(direction==RIGHT){
+                this.cells[r][c].right = false;
+                this.cells[r][c+1].left = false;
+                this.removeWalls(c+1,r);
+            }
+            if(direction==BOTTOM){
+                this.cells[r][c].bottom = false; 
+                this.cells[r-1][c].top = false;
+                this.removeWalls(c,r-1); 
+            }  
+            if(direction==TOP){
+                this.cells[r][c].top = false; 
+                this.cells[r+1][c].bottom = false;
+                this.removeWalls(c,r+1); 
+            }  
         }
     }
-    
 
-    draw(gl, shaderProgram) {
-        for (let r = 0; r < this.height; r++) {
-            for (let c = 0; c < this.width; c++) {
+    draw(gl, shaderProgram){
+        for(let r=0; r<this.HEIGHT; r++){
+            for(let c=0; c<this.WIDTH; c++){
                 this.cells[r][c].draw(gl, shaderProgram, c, r);
             }
         }
+
     }
 }
 
-export {Maze}
+export {Maze};

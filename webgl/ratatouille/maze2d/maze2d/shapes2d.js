@@ -34,10 +34,9 @@ function drawLineLoop(gl, shaderProgram, vertices, color=[0,0,0,1]){
 	drawVertices(gl, shaderProgram, vertices, color, gl.LINE_LOOP);
 }
 
-function drawLine(gl, shaderProgram, vertices, color=[0,0,0,1]){
+function drawLines(gl, shaderProgram, vertices, color=[0,0,0,1]){
 	drawVertices(gl, shaderProgram, vertices, color, gl.LINES);
 }
-
 
 function drawVertices(gl, shaderProgram, vertices, color, style){
     const vertexBufferObject = gl.createBuffer();
@@ -61,4 +60,4 @@ function drawVertices(gl, shaderProgram, vertices, color, style){
     gl.drawArrays(style, 0, vertices.length/2);
 }
 
-export {drawCircle, drawRectangle, drawTriangle, drawLineStrip, drawLine, drawLineLoop};
+export {drawCircle, drawRectangle, drawTriangle, drawLineStrip, drawLineLoop, drawLines};
