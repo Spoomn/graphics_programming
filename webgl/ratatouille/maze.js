@@ -1,4 +1,5 @@
 import {drawLines, drawLineStrip} from "./shapes2d.js";
+import {Bezier, Point2} from "./bezier.js";
 
 class Cell{
     constructor(){
@@ -40,7 +41,10 @@ class Maze{
                 this.cells[r].push(new Cell());
             }
         }
+        this.cells[0][0].bottom = false;
+
         this.removeWalls(0,0);
+        this.cells[HEIGHT - 1][WIDTH - 1].top = false;
 
         this.path= [];
         for(let r=0; r<this.HEIGHT; r++){
@@ -90,6 +94,27 @@ class Maze{
 
     drawPath(gl, shaderProgram){
         drawLineStrip(gl, shaderProgram, this.path, [1,0,1,1]);
+    }
+
+    drawSmoothPath(gl, shaderProgram){
+        for(let curve = 0; curve < this.path.length/2-3; curve++){
+            const bspline = [];
+            for (let i=0; i<4; i++){
+                bspline.push(new Point2(this.path[curve*2+i], this.path[curve*2+i+1]));
+            }
+            const bezierPoints = this.bsplinetoBezier(bspline);
+            const b = new Bezier(bezierPoints[0], bezierPoints[1], bezierPoints[2], bezierPoints[3]);
+            b.drawCurve(gl, shaderProgram);
+        }
+    }
+
+    bsplinetoBezier(bspline){
+        const p0 = bspline[0];
+        const p1 = bspline[1];
+        const p2 = bspline[2];
+        const p3 = bspline[3];
+        const p4 = new Point2((p1.x+p2.x)/2, (p1.y+p2.y)/2);
+        return [p0, p1, p4, p3];
     }
 
     removeWalls(c,r){
@@ -144,6 +169,50 @@ class Maze{
                 this.removeWalls(c,r+1); 
             }  
         }
+    }
+
+    isSafe(x,y,fatness){
+        const c = Math.floor(x);
+        const r = Math.floor(y);
+        const offsetX = x-c;
+        const offsetY = y-r;
+        if(c<0 || r<0 || c>=this.WIDTH || r>=this.HEIGHT){
+            return false;
+        }
+        // test right wall
+        if (this.cells[r][c].right && offsetX + fatness > 1){
+            return false;
+        } 
+        // test left wall
+        if (this.cells[r][c].left && offsetX - fatness < 0){
+            return false;
+        }
+        // test top wall
+        if (this.cells[r][c].top && offsetY + fatness > 1){
+            return false;
+        }
+        // test bottom wall
+        if (this.cells[r][c].bottom && offsetY - fatness < 0){
+            return false;
+        }
+        // test corners
+        // top right corner
+        if (offsetX + fatness > 1 && offsetY - fatness < 0){
+            return false;
+        }
+        // top left corner
+        if (offsetX - fatness < 0 && offsetY - fatness < 0){ 
+            return false;
+        }
+        // bottom right corner
+        if (offsetX + fatness > 1 && offsetY + fatness > 1){ 
+            return false;
+        }
+        // bottom left corner
+        if (offsetX - fatness < 0 && offsetY + fatness > 1){ 
+            return false;
+        }
+        return true;
     }
 
     draw(gl, shaderProgram){

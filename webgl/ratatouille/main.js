@@ -28,16 +28,16 @@ async function main() {
 	//
 	// Create content to display
 	//
-	const WIDTH = 8;
+	const WIDTH = 5;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
-	const rat = new Rat(.5,.5, 90)
+	const rat = new Rat(.5,.5, 90, m);
 
 	//
 	// load a projection matrix onto the shader
 	// 
 
-	const margin = 0.5;
+	const margin = 0.5; 
 
 	let xlow = 0.0-margin;
 	let xhigh = WIDTH+margin;
@@ -182,7 +182,7 @@ async function main() {
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
 		m.draw(gl, shaderProgram)
 		if (solution){
-			m.drawPath(gl, shaderProgram)
+			m.drawSmoothPath(gl, shaderProgram)
 		}
 		rat.draw(gl, shaderProgram)
 		
