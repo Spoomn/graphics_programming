@@ -1,8 +1,7 @@
 import { initShaderProgram } from "./shader.js";
-import { drawCircle, drawRectangle, drawTriangle, drawLineStrip } from "./shapes2d.js";
-import { randomDouble } from "./random.js";
 import {Maze} from "./maze.js"
 import {Rat} from "./rat.js"
+import {Cheese} from "./cheese.js"
 
 main();
 async function main() {
@@ -16,8 +15,7 @@ async function main() {
 	if (!gl) {
 		alert('Your browser does not support WebGL');
 	}
-	gl.clearColor(1,1,1, 1.0);
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.clearColor(.82,.914,.925, 1.0);
 
 	//
 	// Create shaders
@@ -28,10 +26,11 @@ async function main() {
 	//
 	// Create content to display
 	//
-	const WIDTH = 5;
+	const WIDTH = 8;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
 	const rat = new Rat(.5,.5, 90, m);
+	const cheese = new Cheese(WIDTH-.5, HEIGHT-.5, 0);
 
 	//
 	// load a projection matrix onto the shader
@@ -46,7 +45,6 @@ async function main() {
 
 	squareWorld();
 	window.addEventListener('resize', squareWorld);
-
 
 	function squareWorld(){
 		const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
@@ -149,13 +147,16 @@ async function main() {
 	//
 	// Main render loop
 	//
+	
 	let previousTime = 0;
 	function redraw(currentTime){
+		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
 		currentTime *= .001; // milliseconds to seconds
 		let DT = currentTime - previousTime;
 		if(DT > .1)
 			DT = .1;
 		previousTime = currentTime;
+		console.log(1/DT);
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -178,15 +179,13 @@ async function main() {
 			rat.strafeRight(DT);
 		}
 		
-
-		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-		m.draw(gl, shaderProgram)
-		if (solution){
-			m.drawSmoothPath(gl, shaderProgram)
-		}
+		// m.draw(gl, shaderProgram)
+		// if (solution){
+		// 	m.drawPath(gl, shaderProgram)
+		// }
 		rat.draw(gl, shaderProgram)
+		cheese.draw(gl, shaderProgram)
 		
-
 		requestAnimationFrame(redraw);
 	}
 	requestAnimationFrame(redraw);

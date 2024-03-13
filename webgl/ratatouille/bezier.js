@@ -23,7 +23,7 @@ class Bezier {
             [.647,.055,.055,1], //google red
             [.090,.306,.651,1], //google blue
         ]
-        this.color = customColors[Math.floor(Math.random() * customColors.length)];
+        this.color = [.24,.24,.24,1];
     }
 
 
