@@ -274,7 +274,7 @@ function setRatsView(gl ,shaderProgram, WIDTH, HEIGHT, canvas, rat){
 
 	const lookAtMatrix = mat4.create();
 	const eye = [rat.x, rat.y, rat.TALLNESS+.2];
-	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), 0.5];
+	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), 0.7];
 	const up = [0, 0, 1]
 	mat4.lookAt(lookAtMatrix, eye, at, up);
 	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
