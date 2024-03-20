@@ -179,10 +179,10 @@ async function main() {
 			rat.strafeRight(DT);
 		}
 		
-		// m.draw(gl, shaderProgram)
-		// if (solution){
-		// 	m.drawPath(gl, shaderProgram)
-		// }
+		m.draw(gl, shaderProgram)
+		if (solution){
+			m.drawPath(gl, shaderProgram)
+		}
 		rat.draw(gl, shaderProgram)
 		cheese.draw(gl, shaderProgram)
 		
