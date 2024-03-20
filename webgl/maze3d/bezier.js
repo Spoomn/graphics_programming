@@ -1,8 +1,16 @@
 import { drawLineStrip, drawCircle} from "./shapes2d.js";
+import { drawLineStrip3d } from "./shapes3d.js";
 class Point2 {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+    }
+}
+class Point3 {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 }
 
@@ -50,6 +58,17 @@ class Bezier {
         drawLineStrip(gl, shaderProgram, points, this.color);
     }
 
+    drawCurve3d(gl, shaderProgram) {
+        const segments = 20;
+        let points = [];
+        for (let i = 0; i <= segments; i++) {
+            let t = i / segments;
+            let pt = this.evaluate(t);
+            points.push(pt.x, pt.y, pt.z, this.color[0], this.color[1], this.color[2]);
+        }
+        drawLineStrip3d(gl, shaderProgram, points);
+    }
+
     drawControlPoints(gl, shaderProgram) {
         const pointSize = this.isSelected ? 0.2 : 0.1;
         this.points.forEach(point => {
@@ -76,4 +95,4 @@ class Bezier {
         }
     }
 }
-export {Point2, Bezier};
+export {Point2, Bezier, Point3};

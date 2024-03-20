@@ -10,23 +10,27 @@ function drawQuad(gl, shaderProgram, x1,y1,z1, x2,y2,z2, x3,y3,z3, x4,y4,z4, r,g
 	drawTriangle3d(gl, shaderProgram, x1,y1,z1, x3,y3,z3, x4,y4,z4, r,g,b);
 }
 
-function drawCircle3d(gl, shaderProgram, x, y, z, radius, color){
-	const vertices = [];
-	for(let i=0; i<360; i+=10){
-		const radians = i * Math.PI / 180;
-		vertices.push(x+radius*Math.cos(radians));
-		vertices.push(y+radius*Math.sin(radians));
-		vertices.push(z);
+function drawCircle3d(gl, shaderProgram, x,y,z, radius, r,g,b){
+	let vertices = [];
+	const numSides = 50;
+	for(let i = 0; i < numSides; i++){
+		let theta = (i/numSides) * 2 * Math.PI;
+		let x1 = x + radius * Math.cos(theta);
+		let y1 = y + radius * Math.sin(theta);
+		vertices.push(x1, y1, z, r,g,b);
 	}
-	drawVertices3d(gl, shaderProgram, vertices, color, gl.TRIANGLE_FAN);
+	drawLineStrip3d(gl, shaderProgram, vertices);
+	gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 6);
 }
 
-function drawLineStrip3d(gl, shaderProgram, vertices, color){
-	drawVertices3d(gl, shaderProgram, vertices, color, gl.LINE_STRIP);
+function drawLineStrip3d(gl, shaderProgram, vertices){
+	drawVertices3d(gl, shaderProgram, vertices, gl.LINE_STRIP);
 }
 
-function drawbezierCurve3d(gl, shaderProgram, vertices, color){
-	drawVertices3d(gl, shaderProgram, vertices, color, gl.LINE_STRIP);
+function drawbezierCurve3d(gl, shaderProgram, vertices){
+	drawVertices3d(gl, shaderProgram, vertices, gl.LINE_STRIP);
 }
 
 function drawVertices3d(gl, shaderProgram, vertices, style){
@@ -60,5 +64,7 @@ function drawVertices3d(gl, shaderProgram, vertices, style){
 
     gl.drawArrays(style, 0, vertices.length/6);
 }
+
+
 
 export {drawQuad, drawTriangle3d, drawVertices3d, drawCircle3d, drawLineStrip3d, drawbezierCurve3d};

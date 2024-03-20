@@ -29,7 +29,7 @@ async function main() {
 	//
 	// Create content to display
 	//
-	const WIDTH = 5;
+	const WIDTH = 8;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
 	const rat = new Rat(.5,.5, 90, m);
@@ -202,7 +202,7 @@ async function main() {
 		}
 
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-		// m.draw(gl, shaderProgram)
+		m.draw(gl, shaderProgram)
 		m.drawOptimized(gl, shaderProgram)
 		if (solution){
 			m.drawPath(gl, shaderProgram)
@@ -225,7 +225,7 @@ function setObservationView(gl, shaderProgram, WIDTH, HEIGHT, canvas){
 	mat4.perspective(projectionMatrix, fov, canvasAspect, near, far);
 
 	const lookAtMatrix = mat4.create();
-	const eye = [WIDTH/2+.1, -HEIGHT/5, WIDTH];
+	const eye = [WIDTH/4, -HEIGHT/6, WIDTH];
 	const at = [WIDTH/2, HEIGHT/2, 0];
 	const up = [0, 0, 1]
 	mat4.lookAt(lookAtMatrix, eye, at, up);
@@ -261,7 +261,6 @@ function setTopView(gl, shaderProgram, WIDTH, HEIGHT, canvas){
 		const yhighNew = ymid + newHeight/2;
 		mat4.ortho(projectionMatrix, xlow, xhigh, ylowNew, yhighNew, -1, 1) 
 	}
-
 	gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
 }
 
