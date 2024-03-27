@@ -62,7 +62,9 @@ function drawVertices3d(gl, shaderProgram, vertices, style){
 	);
 	gl.enableVertexAttribArray(colorAttribLocation);
 
-    gl.drawArrays(style, 0, vertices.length/6);
+    gl.drawArrays(style, 0, vertices.length/(3 + 3));
+
+	return vertexBufferObject;
 }
 
 

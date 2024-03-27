@@ -30,7 +30,7 @@ class Circle {
         this.dy = (Math.random() - 0.5) * 10;
     }
     update(DT){
-        const gravity = -9.815;
+        const gravity = -9.815/2;
         this.dy += gravity * DT;
 
         const airFriction = 0.99

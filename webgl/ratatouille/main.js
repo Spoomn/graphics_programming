@@ -95,6 +95,8 @@ async function main() {
 	let strafeLeft = false;
 	let strafeRight = false;
 	let solution = false;
+	let speedMode = false;
+
 
 	window.addEventListener("keydown", keyDown);
 	function keyDown(event){
@@ -119,6 +121,10 @@ async function main() {
 		if (event.code == "KeyH"){
 			solution = true;
 		}
+		if (event.shiftKey){
+			speedMode = true;
+			console.log("shift down")
+		}
 	}
 	window.addEventListener("keyup", keyUp);
 	function keyUp(event){
@@ -142,6 +148,10 @@ async function main() {
 		}
 		if (event.code == "KeyH"){
 			solution = false;
+		}
+		if (event.code == "ShiftLeft"){
+			speedMode = false;
+			console.log("shift up")
 		}
 	}
 	//
@@ -178,6 +188,7 @@ async function main() {
 		if (strafeRight){
 			rat.strafeRight(DT);
 		}
+
 		
 		m.draw(gl, shaderProgram)
 		if (solution){

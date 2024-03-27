@@ -63,7 +63,6 @@ class Cell{
         // floor plane
     }
     drawOptimized(gl, shaderProgram, x, y, vertices){
-
         // draw 3d quad walls
         const r = Math.sin(x/10)*.9+.5;
         const g = Math.sin(y/10)*.9+.5;
@@ -72,25 +71,21 @@ class Cell{
             // drawQuad(gl, shaderProgram, x,y,0, x,y+1,0, x,y+1,1, x,y,1, r,g,b);
             vertices.push(x,y,0, r,g,b, x,y+1,0, r,g,b, x,y+1,1, r,g,b);
             vertices.push(x,y,0, r,g,b, x,y+1,1, r,g,b, x,y,1, r,g,b);
-
         }
         if(this.bottom){
             // drawQuad(gl, shaderProgram, x,y,0,x+1,y,0,x+1,y,1,x,y,1, r,g,b);
             vertices.push(x,y,0, r,g,b, x+1,y,0, r,g,b, x+1,y,1, r,g,b);
             vertices.push(x,y,0, r,g,b, x+1,y,1, r,g,b, x,y,1, r,g,b);
-
         }
         if(this.right){
             // drawQuad(gl, shaderProgram, x+1,y,0,x+1,y+1,0,x+1,y+1,1,x+1,y,1, r,g,b);
             vertices.push(x+1,y,0, r,g,b, x+1,y+1,0, r,g,b, x+1,y+1,1, r,g,b);
             vertices.push(x+1,y,0, r,g,b, x+1,y+1,1, r,g,b, x+1,y,1, r,g,b);
-
         }
         if(this.top){
             // drawQuad(gl, shaderProgram, x,y+1,0,x+1,y+1,0,x+1,y+1,1,x,y+1,1, r,g,b);
             vertices.push(x,y+1,0, r,g,b, x+1,y+1,0, r,g,b, x+1,y+1,1, r,g,b);
             vertices.push(x,y+1,0, r,g,b, x+1,y+1,1, r,g,b, x,y+1,1, r,g,b);
-
         }
 
         // floor plane

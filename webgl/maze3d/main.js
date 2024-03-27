@@ -266,7 +266,7 @@ function setTopView(gl, shaderProgram, WIDTH, HEIGHT, canvas){
 
 function setRatsView(gl ,shaderProgram, WIDTH, HEIGHT, canvas, rat){
 	const projectionMatrix = mat4.create();
-	const fov = Math.PI / 3; // 120 degrees
+	const fov = Math.PI / 2; // 90 degrees
 	const canvasAspect = canvas.clientWidth / canvas.clientHeight;
 	const near = .1;
 	const far = WIDTH+HEIGHT+1;
@@ -274,7 +274,7 @@ function setRatsView(gl ,shaderProgram, WIDTH, HEIGHT, canvas, rat){
 
 	const lookAtMatrix = mat4.create();
 	const eye = [rat.x, rat.y, rat.TALLNESS+.2];
-	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), 0.7];
+	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), 0.5];
 	const up = [0, 0, 1]
 	mat4.lookAt(lookAtMatrix, eye, at, up);
 	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
