@@ -1,13 +1,22 @@
 // Description: This file contains functions to draw 3D shapes using WebGL.
 
-function drawTriangle3d(gl, shaderProgram, x1,y1,z1, x2,y2,z2, x3,y3,z3, r,g,b){
-	let vertices = [x1,y1,z1, r,g,b, x2,y2,z2, r,g,b, x3,y3,z3, r,g,b];
-	drawVertices3d(gl, shaderProgram, vertices, gl.TRIANGLES);
+function storeQuad(vertices, x1, y1, z1, u1,v1, x2, y2, z2, u2,v2, x3, y3, z3, u3,v3, x4, y4, z4, u4,v4) {
+	vertices.push(x1, y1, z1, u1,v1, x2, y2, z2, u2,v2, x3, y3, z3, u3,v3);
+	vertices.push(x1, y1, z1, u1,v1, x3, y3, z3, u3,v3, x4, y4, z4, u4,v4);
 }
 
-function drawQuad(gl, shaderProgram, x1,y1,z1, x2,y2,z2, x3,y3,z3, x4,y4,z4, r,g,b){
-	drawTriangle3d(gl, shaderProgram, x1,y1,z1, x2,y2,z2, x3,y3,z3, r,g,b);
-	drawTriangle3d(gl, shaderProgram, x1,y1,z1, x3,y3,z3, x4,y4,z4, r,g,b);
+function drawTriangle3d(gl, shaderProgram, x1, y1, z1, u1, v1, x2, y2, z2, u2, v2, x3, y3, z3, u3, v3) {
+    let vertices = [
+        x1, y1, z1, u1, v1,
+        x2, y2, z2, u2, v2,
+        x3, y3, z3, u3, v3
+    ];
+    drawVertices3d(gl, shaderProgram, vertices, gl.TRIANGLES);
+}
+
+
+function drawQuad(gl, shaderProgram, vertices){
+	drawVertices3d(gl, shaderProgram, vertices, gl.TRIANGLE_FAN);
 }
 
 function drawCircle3d(gl, shaderProgram, x,y,z, radius, r,g,b){
@@ -46,12 +55,12 @@ function drawVertices3d(gl, shaderProgram, vertices, style){
 		gl.FLOAT, // Type of elements
 		gl.FALSE,
 		5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-		0 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
+		0 // Offset from the beginning of a single vertex to this attribute
 	);
 	gl.enableVertexAttribArray(positionAttribLocation);
 	
 	// uv attribute
-	const uvAttribLocation = gl.getAttribLocation(shaderProgram, 'vertColor');
+	const uvAttribLocation = gl.getAttribLocation(shaderProgram, 'vertUV');
 	gl.vertexAttribPointer(
 		uvAttribLocation, // Attribute location
 		2, // Number of elements per attribute
@@ -62,11 +71,11 @@ function drawVertices3d(gl, shaderProgram, vertices, style){
 	);
 	gl.enableVertexAttribArray(uvAttribLocation);
 
-    gl.drawArrays(style, 0, vertices.length/(3 + 2));
+    gl.drawArrays(style, 0, vertices.length/(3 + 2)); 
 
-	return vertexBufferObject;
 }
 
 
 
-export {drawQuad, drawTriangle3d, drawVertices3d, drawCircle3d, drawLineStrip3d, drawbezierCurve3d};
+export {drawQuad, drawTriangle3d, drawVertices3d, drawCircle3d, drawLineStrip3d, drawbezierCurve3d,
+	storeQuad};

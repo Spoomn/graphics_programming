@@ -10,7 +10,7 @@ class Rat{
 
         this.SPIN_SPEED = 120;
         this.MOVE_SPEED = 1.7;
-        this.FATNESS = .35; // how fat is the rat?
+        this.FATNESS = .3; // how fat is the rat?
         this.TALLNESS = .3; // how tall is the rat?
     }
 

@@ -5,6 +5,7 @@ import {Maze} from "./maze.js"
 import {Rat} from "./rat.js"
 import {Cheese} from "./cheese.js"
 import { TOP_VIEW, OBSERVATION_VIEW, RATS_VIEW } from "./constants.js";
+import { storeQuad, drawQuad, drawVertices3d } from "./shapes3d.js";
 
 main();
 async function main() {
@@ -29,14 +30,14 @@ async function main() {
 
 	// load a texture and move it to the gpu
 	gl.activeTexture(gl.TEXTURE0);
-	gl.bindTexture(gl.TEXTURE_2D, loadTexture(gl, "Textures/brick.jpg"));
+	gl.bindTexture(gl.TEXTURE_2D, loadTexture(gl, "Textures/tileable.jpg"));
 	gl.uniform1i(gl.getUniformLocation(shaderProgram, "uTexture0"), 0);
 
 
 	//
 	// Create content to display
 	//
-	const WIDTH = 8;
+	const WIDTH = 10;
 	const HEIGHT = WIDTH;
 	const m = new Maze(WIDTH, HEIGHT);
 	const rat = new Rat(.5,.5, 90, m);
@@ -64,10 +65,14 @@ async function main() {
 	//
 	addEventListener("click", click);
 	function click(event) {
-		console.log("click");
+		console.log("Position Reset!");
 		const xWorld = xlow + event.clientX / gl.canvas.clientWidth * (xhigh - xlow);
 		const yWorld = ylow + (gl.canvas.clientHeight - event.clientY) / gl.canvas.clientHeight * (yhigh - ylow);
-		// Do whatever you want here, in World Coordinates.
+		// reset to starting position
+		rat.x = .5;
+		rat.y = .5;
+		rat.degrees = 90;
+
 	}
 
 	let spinLeft = false;
@@ -80,10 +85,10 @@ async function main() {
 
 	window.addEventListener("keydown", keyDown);
 	function keyDown(event){
-		if (event.code == 'KeyQ'){
+		if (event.code == 'KeyA'){
 			spinLeft = true;
 		}
-		if (event.code == 'KeyE'){
+		if (event.code == 'KeyD'){
 			spinRight = true;
 		}
 		if (event.code == 'KeyW'){
@@ -92,12 +97,12 @@ async function main() {
 		if (event.code == 'KeyS'){
 			scurryBackward = true;
 		}
-		if (event.code == "KeyA"){
-			strafeLeft = true
-		}
-		if (event.code == "KeyD"){
-			strafeRight = true
-		}
+		// if (event.code == "KeyA"){
+		// 	strafeLeft = true
+		// }
+		// if (event.code == "KeyD"){
+		// 	strafeRight = true
+		// }
 		if (event.code == "KeyH"){
 			solution = true;
 		}
@@ -113,10 +118,10 @@ async function main() {
 	}
 	window.addEventListener("keyup", keyUp);
 	function keyUp(event){
-		if (event.code == 'KeyQ'){
+		if (event.code == 'KeyA'){
 			spinLeft = false;
 		}
-		if (event.code == 'KeyE'){
+		if (event.code == 'KeyD'){
 			spinRight = false;
 		}
 		if (event.code == 'KeyW'){
@@ -125,12 +130,12 @@ async function main() {
 		if (event.code == 'KeyS'){
 			scurryBackward = false;
 		}
-		if (event.code == "KeyA"){
-			strafeLeft = false
-		}
-		if (event.code == "KeyD"){
-			strafeRight = false
-		}
+		// if (event.code == "KeyA"){
+		// 	strafeLeft = false
+		// }
+		// if (event.code == "KeyD"){
+		// 	strafeRight = false
+		// }
 		if (event.code == "KeyH"){
 			solution = false;
 		}
@@ -147,8 +152,9 @@ async function main() {
 		previousTime = currentTime;
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
 		const vertices = [];
-		let H = 1;
+		let H = 10;
 		let u1 = 0; let v1 = H;
 		let u2 = H; let v2 = H;
 		let u3 = H; let v3 = 0;
@@ -158,6 +164,8 @@ async function main() {
 			10, 0, 0, u2, v2, 
 			10, 10, 0, u3, v3,
 			0, 10, 0, u4, v4)
+		drawQuad(gl, shaderProgram, vertices);
+
 		//  update the rat's position
 		if (spinLeft){
 			rat.spinLeft(DT);
@@ -188,13 +196,14 @@ async function main() {
 		}
 
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-		m.draw(gl, shaderProgram)
+
+		// m.draw(gl, shaderProgram)
 		m.drawOptimized(gl, shaderProgram)
 		if (solution){
 			m.drawPath(gl, shaderProgram)
 		}
-		rat.draw(gl, shaderProgram)
-		cheese.draw(gl, shaderProgram)
+		// rat.draw(gl, shaderProgram)
+		// cheese.draw(gl, shaderProgram)
 		
 
 		requestAnimationFrame(redraw);
@@ -275,7 +284,7 @@ function loadTexture(gl, url) {
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,255,255]));
 
 	const image = new Image();
-	image.onLoad = function(){
+	image.onload = function(){
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 		gl.generateMipmap(gl.TEXTURE_2D);
@@ -283,13 +292,4 @@ function loadTexture(gl, url) {
 	image.src = url;
 
 	return texture;
-}
-
-function storeQuad(vertices, x1,y1,z1, u1,v1, x2,y2,z2, u2,v2, x3,y3,z3, u3,v3, x4,y4,z4, u4,v4){
-	vertices.push(x1,y1,z1, u1,v1);
-	vertices.push(x2,y2,z2, u2,v2);
-	vertices.push(x3,y3,z3, u3,v3);
-	vertices.push(x1,y1,z1, u1,v1);
-	vertices.push(x3,y3,z3, u3,v3);
-	vertices.push(x4,y4,z4, u4,v4);
 }

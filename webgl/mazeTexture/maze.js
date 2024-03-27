@@ -60,36 +60,62 @@ class Cell{
             drawQuad(gl, shaderProgram, x,y+1,0,x+1,y+1,0,x+1,y+1,1,x,y+1,1, r,g,b);
         }
 
-        // floor plane
     }
     drawOptimized(gl, shaderProgram, x, y, vertices){
         // draw 3d quad walls
-        const r = Math.sin(x/10)*.9+.5;
-        const g = Math.sin(y/10)*.9+.5;
-        const b = Math.sin(x/10+y/10)*.9+.5;
+            // const r = Math.sin(x/10)*.9+.5;
+            // const g = Math.sin(y/10)*.9+.5;
+            // const b = Math.sin(x/10+y/10)*.9+.5;
+        const H = 4
+        let u1 = 0, v1 = 0; // Bottom-left
+        let u2 = H, v2 = 0; // Bottom-right
+        let u3 = H, v3 = H; // Top-right
+        let u4 = 0, v4 = H; // Top-left
         if(this.left){
-            // drawQuad(gl, shaderProgram, x,y,0, x,y+1,0, x,y+1,1, x,y,1, r,g,b);
-            vertices.push(x,y,0, r,g,b, x,y+1,0, r,g,b, x,y+1,1, r,g,b);
-            vertices.push(x,y,0, r,g,b, x,y+1,1, r,g,b, x,y,1, r,g,b);
+            vertices.push(
+                x,y,0, u1, v1, 
+                x,y+1,0, u2, v2, 
+                x,y+1,1, u3, v3);
+            vertices.push(
+                x,y,0, u1, v1, 
+                x,y+1,1, u3, v3,
+                x,y,1, u4, v4);
         }
         if(this.bottom){
-            // drawQuad(gl, shaderProgram, x,y,0,x+1,y,0,x+1,y,1,x,y,1, r,g,b);
-            vertices.push(x,y,0, r,g,b, x+1,y,0, r,g,b, x+1,y,1, r,g,b);
-            vertices.push(x,y,0, r,g,b, x+1,y,1, r,g,b, x,y,1, r,g,b);
+            vertices.push(
+                x,y,0, u1, v1, 
+                x+1,y,0, u2, v2, 
+                x+1,y,1, u3, v3);
+            vertices.push(
+                x,y,0, u1, v1, 
+                x+1,y,1, u3, v3,
+                x,y,1, u4, v4);
+            
         }
         if(this.right){
-            // drawQuad(gl, shaderProgram, x+1,y,0,x+1,y+1,0,x+1,y+1,1,x+1,y,1, r,g,b);
-            vertices.push(x+1,y,0, r,g,b, x+1,y+1,0, r,g,b, x+1,y+1,1, r,g,b);
-            vertices.push(x+1,y,0, r,g,b, x+1,y+1,1, r,g,b, x+1,y,1, r,g,b);
+            vertices.push(
+                x+1,y,0, u1, v1, 
+                x+1,y+1,0, u2, v2, 
+                x+1,y+1,1, u3, v3);
+            vertices.push(
+                x+1,y,0, u1, v1, 
+                x+1,y+1,1, u3, v3,
+                x+1,y,1, u4, v4);
+            
         }
         if(this.top){
-            // drawQuad(gl, shaderProgram, x,y+1,0,x+1,y+1,0,x+1,y+1,1,x,y+1,1, r,g,b);
-            vertices.push(x,y+1,0, r,g,b, x+1,y+1,0, r,g,b, x+1,y+1,1, r,g,b);
-            vertices.push(x,y+1,0, r,g,b, x+1,y+1,1, r,g,b, x,y+1,1, r,g,b);
+            vertices.push(
+                x,y+1,0, u1, v1, 
+                x+1,y+1,0, u2, v2, 
+                x+1,y+1,1, u3, v3);
+            vertices.push(
+                x,y+1,0, u1, v1, 
+                x+1,y+1,1, u3, v3,
+                x,y+1,1, u4, v4);
+            
         }
 
-        // floor plane
-        drawQuad(gl, shaderProgram, x,y,-.0001, x+1,y,-.0001, x+1,y+1,-.0001, x,y+1,-.0001, .25,.45,.98);
+
     }
 }
 
