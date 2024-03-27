@@ -221,7 +221,7 @@ function setObservationView(gl, shaderProgram, WIDTH, HEIGHT, canvas){
 	const fov = Math.PI / 2; // 90 degrees
 	const canvasAspect = canvas.clientWidth / canvas.clientHeight;
 	const near = 1;
-	const far = 20;
+	const far = WIDTH+HEIGHT+1;
 	mat4.perspective(projectionMatrix, fov, canvasAspect, near, far);
 
 	const lookAtMatrix = mat4.create();
