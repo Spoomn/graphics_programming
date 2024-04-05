@@ -57,7 +57,7 @@ async function main() {
 		  [x, y, z]
 		);
 	  }
-	  let eye = [0, -2, 1];
+	  let eye = [0, 0, 15];
 	  setEye(eye[0], eye[1], eye[2]);
 
 
@@ -91,7 +91,7 @@ async function main() {
 		// Setup projection matrix
 		//
 
-		setObservationView(gl, shaderProgram, canvas.clientWidth / canvas.clientHeight, eye)
+		setObservationView(gl, shaderProgram, canvas.clientWidth / canvas.clientHeight, eye, t)
 
 
 		//
@@ -131,6 +131,7 @@ function drawSphere(gl, shaderProgram) {
 			const alpha1 = j / strips * Math.PI * 2;
 			const alpha2 = (j + 1) / strips * Math.PI * 2;
 			let a = 1;
+			// draw a sphere
 			const [x1,y1,z1] = polarToCartesian(polar1, alpha1);
 			const [x2,y2,z2] = polarToCartesian(polar2, alpha1);
 			const [x3,y3,z3] = polarToCartesian(polar2, alpha2);
@@ -177,15 +178,15 @@ function drawSphere(gl, shaderProgram) {
 }
 
 
-function setObservationView(gl, shaderProgram, canvasAspect, eye) {
+function setObservationView(gl, shaderProgram, canvasAspect, eye, terrain) {
 	const projectionMatrix = mat4.create();
 	const fov = 90 * Math.PI / 180;
 	const near = 1;
-	const far = 200
+	const far = 200;
 	mat4.perspective(projectionMatrix, fov, canvasAspect, near, far);
 
 	const lookAtMatrix = mat4.create();
-	const at = [0,0,1];
+	const at = [terrain.WIDTH / 2, terrain.HEIGHT / 2, 0];
 	mat4.lookAt(lookAtMatrix, eye, at, [0, 0, 1]);
 	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
 

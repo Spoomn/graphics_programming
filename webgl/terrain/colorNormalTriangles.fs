@@ -11,14 +11,14 @@ void main() {
     vec3 finalColor = vec3(0,0,0);
 
     // Add ambient:
-    float ambient = 0.1;
+    float ambient = 0.5;
     finalColor += vec3(materialColor) * ambient;
 
     // Add diffuse:
     vec3 normalizedNormalVector = normalize(fragNormal);
     vec3 lightDirection = normalize(uLightDirection);
     vec3 toLight = lightDirection*-1.0;
-    float d = dot(normalizedNormalVector, toLight) * (1.0 - ambient);
+    float d = dot(normalizedNormalVector, toLight) ;
     if(d>0.0){
       finalColor += vec3(materialColor) * d;
 
