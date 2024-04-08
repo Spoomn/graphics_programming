@@ -14,7 +14,7 @@ async function main() {
 	if (!gl) {
 		alert('Your browser does not support WebGL');
 	}
-	gl.clearColor(0.75, 0.85, 0.8, 1.0);
+	gl.clearColor(113/255,192/255,223/255, 1.0);
 	gl.enable(gl.DEPTH_TEST); // Enable depth testing
 	gl.depthFunc(gl.LEQUAL); // Near things obscure far things
 	gl.enable(gl.CULL_FACE);
