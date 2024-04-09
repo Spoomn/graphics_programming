@@ -1,6 +1,9 @@
 import { initShaderProgram } from "./shader.js";
 import { storeQuad, drawColorNormalVertices, crossProduct, rgbToFloat } from "./shapes2d.js";
 import { Terrain } from "./terrain.js";
+import { Rat } from "./rat.js";
+import { TOP_VIEW, OBSERVATION_VIEW, RATS_VIEW } from "./constants.js";
+
 
 main();
 async function main() {
@@ -31,6 +34,7 @@ async function main() {
 	const WIDTH = 100;
 	const HEIGHT = 100;
 	const t = new Terrain(WIDTH, HEIGHT);
+	const rat = new Rat(50, 50, 0, t);
 	
 	//
 	// load a modelview matrix onto the shader
@@ -68,7 +72,72 @@ async function main() {
 		false,
 		normalMatrix
 	  );
-
+	  let spinLeft = false;
+	  let spinRight = false;
+	  let scurryForward = false;
+	  let scurryBackward = false;
+	  let strafeLeft = false;
+	  let strafeRight = false;
+	  let solution = false;
+	  let currentView = OBSERVATION_VIEW;
+  
+	  window.addEventListener("keydown", keyDown);
+	  function keyDown(event){
+		  if (event.code == 'KeyQ'){
+			  spinLeft = true;
+		  }
+		  if (event.code == 'KeyE'){
+			  spinRight = true;
+		  }
+		  if (event.code == 'KeyW'){
+			  scurryForward = true;
+		  }
+		  if (event.code == 'KeyS'){
+			  scurryBackward = true;
+		  }
+		  if (event.code == "KeyA"){
+			  strafeLeft = true
+		  }
+		  if (event.code == "KeyD"){
+			  strafeRight = true
+		  }
+		  if (event.code == "KeyH"){
+			  solution = true;
+		  }
+		  if (event.code == "KeyO"){
+			  currentView = OBSERVATION_VIEW;
+		  }
+		  if (event.code == "KeyT"){
+			  currentView = TOP_VIEW;
+		  }
+		  if (event.code == "KeyR"){
+			  currentView = RATS_VIEW;
+		  }
+	  }
+	  window.addEventListener("keyup", keyUp);
+	  function keyUp(event){
+		  if (event.code == 'KeyQ'){
+			  spinLeft = false;
+		  }
+		  if (event.code == 'KeyE'){
+			  spinRight = false;
+		  }
+		  if (event.code == 'KeyW'){
+			  scurryForward = false;
+		  }
+		  if (event.code == 'KeyS'){
+			  scurryBackward = false;
+		  }
+		  if (event.code == "KeyA"){
+			  strafeLeft = false
+		  }
+		  if (event.code == "KeyD"){
+			  strafeRight = false
+		  }
+		  if (event.code == "KeyH"){
+			  solution = false;
+		  }
+	  }
 
 	//
 	// Main render loop
@@ -98,9 +167,32 @@ async function main() {
 		// Draw
 		//
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+		if (spinLeft){
+			rat.spinLeft(DT);
+		}
+		if (spinRight){
+			rat.spinRight(DT);
+		}
+		if (scurryForward){
+			rat.scurryForward(DT);
+		}
+		if (scurryBackward){
+			rat.scurryBackward(DT);
+		}
+		if (strafeLeft){
+			rat.strafeLeft(DT);
+		}
+		if (strafeRight){
+			rat.strafeRight(DT);
+		}
 		// drawSphere(gl, shaderProgram);
+		if (currentView == OBSERVATION_VIEW) {
+			setObservationView(gl, shaderProgram, WIDTH, HEIGHT, canvas);
+		} else if (currentView == RATS_VIEW) {
+			setRatsView(gl, shaderProgram, WIDTH, HEIGHT, canvas, rat);
+		}
 		t.draw(gl, shaderProgram);
+		rat.draw(gl, shaderProgram);
 
 		requestAnimationFrame(redraw);
 	}
@@ -190,6 +282,24 @@ function setObservationView(gl, shaderProgram, canvasAspect, eye, terrain) {
 	mat4.lookAt(lookAtMatrix, eye, at, [0, 0, 1]);
 	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
 
+	const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+	gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
+}
+
+function setRatsView(gl ,shaderProgram, WIDTH, HEIGHT, canvas, rat){
+	const projectionMatrix = mat4.create();
+	const fov = Math.PI / 2; // 90 degrees
+	const canvasAspect = canvas.clientWidth / canvas.clientHeight;
+	const near = .1;
+	const far = WIDTH+HEIGHT+1;
+	mat4.perspective(projectionMatrix, fov, canvasAspect, near, far);
+
+	const lookAtMatrix = mat4.create();
+	const eye = [rat.x, rat.y, rat.TALLNESS+.2];
+	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), 0.5];
+	const up = [0, 0, 1]
+	mat4.lookAt(lookAtMatrix, eye, at, up);
+	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
 	const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
 	gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, projectionMatrix);
 }

@@ -4,40 +4,46 @@ class Terrain{
     constructor(WIDTH, HEIGHT){
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
-        this.water = new Water(WIDTH, HEIGHT);
+        this.waterHeight = 0;
+        this.randomSeed = Math.random()*10;
     }
 
 
-    F(x, y){
+    terrainFunction(x, y){
         // TODO: implement a better function, one with variation for each hill
-        const z = Math.sin(x * 0.1) * Math.cos(y * 0.3) * 4;
+        let z = Math.sin(x) * Math.cos(y);
         return z;
+    }
+
+    waterFunction(x, y){
+        return 0;
     }
 
     draw(gl, shaderProgram){
         const vertices = [];
-        // const strips = this.HEIGHT - 1;
-        let accumulatedNormals = Array.from({length: this.WIDTH}, () => Array.from({length: this.HEIGHT}, () => [0,0,0]))
+        const waterVertices = [];
+
+        // draw terrain
         for (let i = 0; i<this.WIDTH; i++){
             for (let j = 0; j<this.HEIGHT; j++){
                 const x1 = i;
                 const y1 = j;
-                const z1 = this.F(x1, y1);
+                const z1 = this.terrainFunction(x1, y1);
                 const x2 = i+1;
                 const y2 = j;
-                const z2 = this.F(x2, y2);
+                const z2 = this.terrainFunction(x2, y2);
                 const x3 = i+1;
                 const y3 = j+1;
-                const z3 = this.F(x3, y3);
+                const z3 = this.terrainFunction(x3, y3);
                 const x4 = i;
                 const y4 = j+1;
-                const z4 = this.F(x4, y4);
-                // const [nx,ny,nz] = crossProduct(x1,y1,z1,x2,y2,z2,x3,y3,z3);
-                let nx = 0;
-                let ny = 0;
-                let nz = 1;
+                const z4 = this.terrainFunction(x4, y4);
+                const [nx1,ny1,nz1] = crossProduct(x1,y1,z1,x1+.001,y1,this.terrainFunction(x1+.001,y1),x1,y1+.001,this.terrainFunction(x1,y1+.001));
+                const [nx2,ny2,nz2] = crossProduct(x2,y2,z2,x2+.001,y2,this.terrainFunction(x2+.001,y2),x2,y2+.001,this.terrainFunction(x2,y2+.001));
+                const [nx3,ny3,nz3] = crossProduct(x3,y3,z3,x3+.001,y3,this.terrainFunction(x3+.001,y3),x3,y3+.001,this.terrainFunction(x3,y3+.001));
+                const [nx4,ny4,nz4] = crossProduct(x4,y4,z4,x4+.001,y4,this.terrainFunction(x4+.001,y4),x4,y4+.001,this.terrainFunction(x4,y4+.001));
                 
-                // let {r, g, b} = rgbToFloat(191,32,100);
+                // let {r, g, b} = rgbToFloat(32,191,100);
                 let r = Math.sin(this.WIDTH * 3712 + j * 34857 + 1) * .5 + .5;
                 let g = Math.sin(this.WIDTH * 9321 + j * 27543 + 2) * .5 + .5;
                 let b = Math.sin(this.WIDTH * 1268 + j * 12771 + 7) * .5 + .5;
@@ -48,43 +54,49 @@ class Terrain{
 
                 
                 storeQuad(vertices, 
-                    x1, y1, z1, nx, ny, nz,
-                    x2, y2, z2, nx, ny, nz,
-                    x3, y3, z3, nx, ny, nz,
-                    x4, y4, z4, nx, ny, nz,
+                    x1, y1, z1, nx1, ny1, nz1,
+                    x2, y2, z2, nx2, ny2, nz2,
+                    x3, y3, z3, nx3, ny3, nz3,
+                    x4, y4, z4, nx4, ny4, nz4,
                     r, g, b, a);
+                }
+            }   
+        for (let i = 0; i<this.WIDTH; i++){
+            for ( let j = 0; j<this.HEIGHT; j++){
+                // draw water plane
+                const waterHeight = this.waterFunction(i, j);
+                const waterColor = rgbToFloat(0, 0, 255);
+                const waterAlpha = 1;
+                const x1 = 0;
+                const y1 = 0;
+                const z1 = waterHeight;
+                const x2 = this.WIDTH;
+                const y2 = 0;
+                const z2 = waterHeight;
+                const x3 = this.WIDTH;
+                const y3 = this.HEIGHT;
+                const z3 = waterHeight;
+                const x4 = 0;
+                const y4 = this.HEIGHT;
+                const z4 = waterHeight;
+                const [nx1,ny1,nz1] = crossProduct(x1,y1,z1,x1+.001,y1,this.terrainFunction(x1+.001,y1),x1,y1+.001,this.terrainFunction(x1,y1+.001));
+                const [nx2,ny2,nz2] = crossProduct(x2,y2,z2,x2+.001,y2,this.terrainFunction(x2+.001,y2),x2,y2+.001,this.terrainFunction(x2,y2+.001));
+                const [nx3,ny3,nz3] = crossProduct(x3,y3,z3,x3+.001,y3,this.terrainFunction(x3+.001,y3),x3,y3+.001,this.terrainFunction(x3,y3+.001));
+                const [nx4,ny4,nz4] = crossProduct(x4,y4,z4,x4+.001,y4,this.terrainFunction(x4+.001,y4),x4,y4+.001,this.terrainFunction(x4,y4+.001));
+
+                storeQuad(waterVertices, 
+                    x1, y1, z1, nx1, ny1, nz1,
+                    x2, y2, z2, nx2, ny2, nz2,
+                    x3, y3, z3, nx3, ny3, nz3,
+                    x4, y4, z4, nx4, ny4, nz4,
+                    waterColor.r, waterColor.g, waterColor.b, waterAlpha);
             }
-        }   
-        
+        }
+
+        drawColorNormalVertices(gl, shaderProgram, waterVertices, gl.TRIANGLES);
         drawColorNormalVertices(gl, shaderProgram, vertices, gl.TRIANGLES);
-    }
-}
-
-class Water{
-    constructor(WIDTH, HEIGHT){
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
-        this.baseWaterHeight = 0;
-        this.color = rgbToFloat(0, 50, 255);
-        this.alpha = 0.6;
-    }
-
-    draw(gl, shaderProgram){
-        const vertices = [];
-        let alpha = this.alpha;
-        gl.enable(gl.blend)
         
-        let {r,g,b} = this.color;
-        let nx = 0;
-        let ny = 0;
-        let nz = 1;
-        storeQuad(vertices, 0, 0, this.baseWaterHeight, nx, ny, nz,
-                    this.WIDTH, 0, this.baseWaterHeight, nx, ny, nz,
-                    this.WIDTH, this.HEIGHT, this.baseWaterHeight, nx, ny, nz,
-                    0, this.HEIGHT, this.baseWaterHeight, nx, ny, nz,
-                    r,g,b, alpha);
-        gl.disable(gl.blend);
     }
 }
 
-export { Terrain, Water}
+export { Terrain}
