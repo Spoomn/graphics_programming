@@ -5,15 +5,16 @@ class Terrain{
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
         this.waterHeight = 0;
-        this.randomSeed = Math.random()*10;
     }
 
 
     terrainFunction(x, y){
-        // TODO: implement a better function, one with variation for each hill
-        let z = Math.sin(x) * Math.cos(y);
-        return z;
-    }
+            let z = 0;
+            z += 3*Math.sin(x/2 + 4) + 3*Math.cos(x/5 + 6);
+            z += 4*Math.sin(y/4 + 5);
+            z += 3*Math.sin(x/4 + 6) + 3*Math.cos(y/5 + 6);
+            return z;
+          }
 
     waterFunction(x, y){
         return 0;
@@ -43,10 +44,10 @@ class Terrain{
                 const [nx3,ny3,nz3] = crossProduct(x3,y3,z3,x3+.001,y3,this.terrainFunction(x3+.001,y3),x3,y3+.001,this.terrainFunction(x3,y3+.001));
                 const [nx4,ny4,nz4] = crossProduct(x4,y4,z4,x4+.001,y4,this.terrainFunction(x4+.001,y4),x4,y4+.001,this.terrainFunction(x4,y4+.001));
                 
-                // let {r, g, b} = rgbToFloat(32,191,100);
-                let r = Math.sin(this.WIDTH * 3712 + j * 34857 + 1) * .5 + .5;
-                let g = Math.sin(this.WIDTH * 9321 + j * 27543 + 2) * .5 + .5;
-                let b = Math.sin(this.WIDTH * 1268 + j * 12771 + 7) * .5 + .5;
+                let {r, g, b} = rgbToFloat(32,191,100);
+                // let r = Math.sin(this.WIDTH * 3712 + j * 34857 + 1) * .5 + .5;
+                // let g = Math.sin(this.WIDTH * 9321 + j * 27543 + 2) * .5 + .5;
+                // let b = Math.sin(this.WIDTH * 1268 + j * 12771 + 7) * .5 + .5;
                 let a = 1;
                 // let r = Math.sin(this.HEIGHT + this.WIDTH + i + j) * .5 + .5;
                 // let g = Math.sin(this.HEIGHT + this.WIDTH + i + j) * .5 + .5;
@@ -65,8 +66,8 @@ class Terrain{
             for ( let j = 0; j<this.HEIGHT; j++){
                 // draw water plane
                 const waterHeight = this.waterFunction(i, j);
-                const waterColor = rgbToFloat(0, 0, 255);
-                const waterAlpha = 1;
+                const waterColor = rgbToFloat(20, 20, 200);
+                const waterAlpha = 0.9;
                 const x1 = 0;
                 const y1 = 0;
                 const z1 = waterHeight;

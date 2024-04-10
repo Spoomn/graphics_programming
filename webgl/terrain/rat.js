@@ -2,14 +2,15 @@ import { drawLineLoop, drawLines, drawLineStrip, drawCircle, drawTriangle } from
 import {drawQuad, drawTriangle3d, drawVertices3d, drawCircle3d, drawLineStrip3d, drawbezierCurve3d} from "./shapes3d.js";
 import {Bezier, Point2, Point3} from "./bezier.js";
 class Rat{
-    constructor(x,y,degrees,maze){
+    constructor(x,y,degrees, terrain){
         this.x = x;
         this.y = y;
+        this.z = 0;
         this.degrees = degrees;
-        this.maze = maze; // the rat needs to know about the maze
+        this.terrain = terrain;
 
         this.SPIN_SPEED = 120;
-        this.MOVE_SPEED = 1.7;
+        this.MOVE_SPEED = 5;
         this.FATNESS = .35; // how fat is the rat?
         this.TALLNESS = .3; // how tall is the rat?
     }
@@ -17,7 +18,7 @@ class Rat{
     draw(gl, shaderProgram){
         const modelViewMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
         const modelViewMatrix = mat4.create();
-        mat4.translate(modelViewMatrix, modelViewMatrix, [this.x, this.y, 0]);
+        mat4.translate(modelViewMatrix, modelViewMatrix, [this.x, this.y, this.z]);
         mat4.rotate(modelViewMatrix, modelViewMatrix, (this.degrees*Math.PI/180), [0,0,1]);
         gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, modelViewMatrix);
 
@@ -89,58 +90,32 @@ class Rat{
         this.spinLeft(-DT)
     }
     scurryForward(DT){
-        
         const dx = Math.cos(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
         const dy = Math.sin(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
-        const newx = this.x + dx;
-        const newy = this.y + dy;
-        // check for walls and adjust the rat's position
-        if (this.maze.isSafe(newx, newy, this.FATNESS)){
-            this.x = newx;
-            this.y = newy;
-        }
-        else if (this.maze.isSafe(newx, this.y, this.FATNESS)){
-            this.x = newx;
-        }
-        else if (this.maze.isSafe(this.x, newy, this.FATNESS)){
-            this.y = newy;
-        }
+        this.x += dx;
+        this.y += dy;
+
+        const dz = this.terrain.terrainFunction(this.x, this.y);
+        this.z = dz
+        
     }
     scurryBackward(DT){
         this.scurryForward(-DT);
     }
-    strafeLeft(DT){
-        const dx = Math.cos(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
-        const dy = Math.sin(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
-        const newx = this.x - dy;
-        const newy = this.y - dx;
-        if (this.maze.isSafe(newx, newy, this.FATNESS)){
-            this.x = newx;
-            this.y = newy;
-        }
-        else if (this.maze.isSafe(newx, this.y, this.FATNESS)){
-            this.x = newx;
-        }
-        else if (this.maze.isSafe(this.x, newy, this.FATNESS)){
-            this.y = newy;
-        }
-    }
-    strafeRight(DT){
-        const dx = Math.cos(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
-        const dy = Math.sin(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
-        const newx = this.x + dy;
-        const newy = this.y + dx;
-        if (this.maze.isSafe(newx, newy, this.FATNESS)){
-            this.x = newx;
-            this.y = newy;
-        }
-        else if (this.maze.isSafe(newx, this.y, this.FATNESS)){
-            this.x = newx;
-        }
-        else if (this.maze.isSafe(this.x, newy, this.FATNESS)){
-            this.y = newy;
-        }
-    }
+    // strafeLeft(DT){
+    //     const dx = Math.cos(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
+    //     const dy = Math.sin(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
+    //     const newx = this.x - dy;
+    //     const newy = this.y - dx;
+        
+    // }
+    // strafeRight(DT){
+    //     const dx = Math.cos(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
+    //     const dy = Math.sin(this.degrees*Math.PI/180)*this.MOVE_SPEED*DT;
+    //     const newx = this.x + dy;
+    //     const newy = this.y + dx;
+        
+    // }
 
     
 }
