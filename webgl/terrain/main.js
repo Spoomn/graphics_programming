@@ -193,8 +193,8 @@ async function main() {
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
 
 		t.draw(gl, shaderProgram);
-		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-		rat.draw(gl, shaderProgram);
+		// gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
+		// rat.draw(gl, shaderProgram);
 
 		requestAnimationFrame(redraw);
 	}
@@ -296,9 +296,18 @@ function setRatsView(gl ,shaderProgram, WIDTH, HEIGHT, canvas, rat, t){
 	mat4.perspective(projectionMatrix, fov, canvasAspect, near, far);
 
 	const lookAtMatrix = mat4.create();
-	const eye = [rat.x, rat.y, t.terrainFunction(rat.x, rat.y)+rat.TALLNESS+.2];
-	const at = [rat.x+Math.cos(rat.degrees*Math.PI/180), rat.y+Math.sin(rat.degrees*Math.PI/180), rat.TALLNESS+.2];
-	const up = [0, 0, 1]
+	let eye = [rat.x, rat.y, t.terrainFunction(rat.x, rat.y)+.2];
+	if (t.terrainFunction(rat.x, rat.y) + 0.2 <= 0.2) {
+		eye = [rat.x, rat.y, 0.2];
+	 }
+	const xAt = rat.x+Math.cos(rat.degrees*Math.PI/180);
+	const yAt = rat.y+Math.sin(rat.degrees*Math.PI/180);
+	const zAt = t.terrainFunction(xAt, yAt);
+	let at = [xAt, yAt, zAt];
+	if (zAt <= 0.2) {
+		at = [xAt, yAt, 0.2];
+	}
+	const up = [0, 0, 1];
 	mat4.lookAt(lookAtMatrix, eye, at, up);
 	mat4.multiply(projectionMatrix, projectionMatrix, lookAtMatrix);
 	const projectionMatrixUniformLocation = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");

@@ -49,10 +49,27 @@ class Terrain{
                 // let g = Math.sin(this.WIDTH * 9321 + j * 27543 + 2) * .5 + .5;
                 // let b = Math.sin(this.WIDTH * 1268 + j * 12771 + 7) * .5 + .5;
                 let a = 1;
+
                 // let r = Math.sin(this.HEIGHT + this.WIDTH + i + j) * .5 + .5;
                 // let g = Math.sin(this.HEIGHT + this.WIDTH + i + j) * .5 + .5;
                 // let b = Math.sin(this.HEIGHT + this.WIDTH + i + j) * .5 + .5;
-
+                // if the z value is greater than 3, color it brown
+                if (z1 > 3){
+                    r = 0.5;
+                    g = 0.3;
+                    b = 0.1;
+                }
+                if (z1 > 4){
+                    r = 0.3;
+                    g = 0.2;
+                    b = 0.1;
+                }
+                if (z1 > 7){
+                    // white
+                    r = 1;
+                    g = 1;
+                    b = 1;
+                }
                 
                 storeQuad(vertices, 
                     x1, y1, z1, nx1, ny1, nz1,
