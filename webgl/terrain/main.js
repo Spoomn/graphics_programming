@@ -187,14 +187,14 @@ async function main() {
 		// drawSphere(gl, shaderProgram);
 		if (currentView == OBSERVATION_VIEW) {
 			setObservationView(gl, shaderProgram, canvas.clientWidth / canvas.clientHeight, t)
+			rat.draw(gl, shaderProgram);
 		} else if (currentView == RATS_VIEW) {
 			setRatsView(gl, shaderProgram, WIDTH, HEIGHT, canvas, rat, t);
 		}
 		gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-
 		t.draw(gl, shaderProgram);
+
 		// gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, identityMatrix)
-		// rat.draw(gl, shaderProgram);
 
 		requestAnimationFrame(redraw);
 	}
