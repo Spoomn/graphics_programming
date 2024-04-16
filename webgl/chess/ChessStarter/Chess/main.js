@@ -1,5 +1,5 @@
 import { initShaderProgram } from "./shader.js";
-import { ChessSet,  } from "./chessSet.js";
+import { ChessSet, Piece } from "./chessSet.js";
 import { Sandra } from "./sandra.js";
 import { Granite } from "./granite.js";
 
@@ -15,10 +15,7 @@ async function main() {
 	if (!gl) {
 		alert('Your browser does not support WebGL');
 	}
-	gl.clearColor(0.75, 0.85, 0.8, 1.0);
-	gl.enable(gl.DEPTH_TEST); // Enable depth testing
-	gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-	gl.enable(gl.CULL_FACE);
+	setupWebGL(gl);
 
 	//
 	// Setup keyboard events:
@@ -63,8 +60,8 @@ async function main() {
 			[x, y, z]
 		);
 	}
-	//setLightDirection(0, -1, -1);
-	setLightDirection(1, -1, -1);
+	setLightDirection(0, -1, -1);
+	// setLightDirection(1, -1, -1);
 
 	const eye = [0, 6, 9];
 	const at = [0, 1.5, 2.3]
@@ -77,13 +74,8 @@ async function main() {
 	//
 	// Create content to display
 	//
-
 	const c = new ChessSet(gl);
 	await c.init(gl);
-	// const p = new Pieces(gl);
-	// await p.init(gl);
-	const s = new Sandra(gl);
-	const g = new Granite(gl);
 
 	window.addEventListener("resize", reportWindowSize);
 	function reportWindowSize() {
@@ -152,5 +144,12 @@ function setObservationView(gl, shaderProgram, eye, at, up, canvasAspect) {
 		gl.getUniformLocation(shaderProgram, "uEyePosition"),
 		eye
 	);
+}
+
+function setupWebGL(gl) {
+    gl.clearColor(0.75, 0.85, 0.8, 1.0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.enable(gl.CULL_FACE);
 }
 
