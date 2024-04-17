@@ -1,12 +1,8 @@
 import { initShaderProgram } from "./shader.js";
-import { ChessSet, Piece } from "./chessSet.js";
-import { Sandra } from "./sandra.js";
-import { Granite } from "./granite.js";
+import { ChessSet, ChessPiece } from "./chessSet.js";
 
 main();
 async function main() {
-	console.log('This is working');
-
 	//
 	// start gl
 	// 
@@ -76,6 +72,9 @@ async function main() {
 	//
 	const c = new ChessSet(gl);
 	await c.init(gl);
+	const p = new ChessPiece(gl, 0, 0, 0, 0);
+	
+	
 
 	window.addEventListener("resize", reportWindowSize);
 	function reportWindowSize() {
@@ -104,7 +103,7 @@ async function main() {
 			DT = .5;
 		frameCounter += 1;
 		if (Math.floor(currentTime) != Math.floor(previousTime)) {
-			console.log(frameCounter);
+			// console.log(frameCounter);
 			frameCounter = 0;
 		}
 		previousTime = currentTime;
