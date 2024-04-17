@@ -19,87 +19,140 @@ class ChessSet {
     }
 
     setupWhiteChessPieces() {
-        let pawnG7 = new ChessPiece("pawnG7", "pawn", {x: 2.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnG7);
-        // this.whiteChessPieces.push(new ChessPiece("pawnG7", "pawn", {x: 2.5, y: 0, z: -2.5}));
-        let pawnH7 = new ChessPiece("pawnH7", "pawn", {x: 3.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnH7);
-        let pawnA7 = new ChessPiece("pawnA7", "pawn", {x: -3.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnA7);
-        let pawnB7 = new ChessPiece("pawnB7", "pawn", {x: -2.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnB7);
-        let pawnC7 = new ChessPiece("pawnC7", "pawn", {x: -1.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnC7);
-        let pawnD7 = new ChessPiece("pawnD7", "pawn", {x: -.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnD7);
-        let pawnE7 = new ChessPiece("pawnE7", "pawn", {x: .5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnE7);
-        let pawnF7 = new ChessPiece("pawnF7", "pawn", {x: 1.5, y: 0, z: -2.5});
-        this.whiteChessPieces.push(pawnF7);
-        let rookH8 = new ChessPiece("rookH8", "rook", {x: 3.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(rookH8);
-        let knightG8 = new ChessPiece("knightG8", "knight", {x: 2.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(knightG8);
-        let bishopF8 = new ChessPiece("bishopF8", "bishop", {x: 1.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(bishopF8);
-        let queenE8 = new ChessPiece("queenE8", "queen", {x: .5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(queenE8);
-        let kingD8 = new ChessPiece("kingD8", "king", {x: -.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(kingD8);
-        let bishopC8 = new ChessPiece("bishopC8", "bishop", {x: -1.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(bishopC8);
-        let knightB8 = new ChessPiece("knightB8", "knight", {x: -2.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(knightB8);
-        let rookA8 = new ChessPiece("rookA8", "rook", {x: -3.5, y: 0, z: -3.5});
-        this.whiteChessPieces.push(rookA8);
+        // Initialize pawns for rank 2
+        let pawnA2 = new ChessPiece("pawnA2", "pawn", {x: -3.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnA2);
+        let pawnB2 = new ChessPiece("pawnB2", "pawn", {x: -2.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnB2);
+        let pawnC2 = new ChessPiece("pawnC2", "pawn", {x: -1.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnC2);
+        let pawnD2 = new ChessPiece("pawnD2", "pawn", {x: -0.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnD2);
+        let pawnE2 = new ChessPiece("pawnE2", "pawn", {x: 0.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnE2);
+        let pawnF2 = new ChessPiece("pawnF2", "pawn", {x: 1.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnF2);
+        let pawnG2 = new ChessPiece("pawnG2", "pawn", {x: 2.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnG2);
+        let pawnH2 = new ChessPiece("pawnH2", "pawn", {x: 3.5, y: 0, z: 2.5});
+        this.whiteChessPieces.push(pawnH2);
 
-        // add animations to the white pieces
-        // pawn G7 to G5
-        pawnG7.addBezierAnimation(2, 2.5, {x: 2.5, y: 0, z: -2.5}, {x: 2.5, y: 1, z: -1.5}, {x: 2.5, y: .25, z: -1.5}, {x: 2.5, y: 0, z: -.5}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0});
-        // pawn G5 to F4
-        pawnG7.addBezierAnimation(4, 4.5, {x: 2.5, y: 0, z: -.5}, {x: 1.5, y: 1, z: .5}, {x: 1.5, y: .25, z: .5}, {x: 1.5, y: 0, z: .5}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0});
-    }
+        // Initialize other pieces for rank 1
+        let rookA1 = new ChessPiece("rookA1", "rook", {x: -3.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(rookA1);
+        let knightB1 = new ChessPiece("knightB1", "knight", {x: -2.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(knightB1);
+        let bishopC1 = new ChessPiece("bishopC1", "bishop", {x: -1.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(bishopC1);
+        let queenD1 = new ChessPiece("queenD1", "queen", {x: -0.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(queenD1);  // Queen on D1 for white
+        let kingE1 = new ChessPiece("kingE1", "king", {x: 0.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(kingE1);    // King on E1 for white
+        let bishopF1 = new ChessPiece("bishopF1", "bishop", {x: 1.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(bishopF1);
+        let knightG1 = new ChessPiece("knightG1", "knight", {x: 2.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(knightG1);
+        let rookH1 = new ChessPiece("rookH1", "rook", {x: 3.5, y: 0, z: 3.5});
+        this.whiteChessPieces.push(rookH1);
+
+            // White's 1st Move: Pawn E2 to E4
+            pawnE2.addBezierAnimation(0, 1, 
+                {x: 0.5, y: 0, z: 3.5}, 
+                {x: 0.5, y: 1, z: 3}, 
+                {x: 0.5, y: 0.25, z: 2}, 
+                {x: 0.5, y: 0, z: 2}
+            );
+        
+            // White's 2nd Move: Knight G1 to F3
+            knightG1.addBezierAnimation(4, 5, 
+                {x: 3.5, y: 0, z: 3.5}, 
+                {x: 3, y: 1, z: 3}, 
+                {x: 2, y: 0.25, z: 2.5}, 
+                {x: 2, y: 0, z: 2.5}
+            );
+        
+            // White's 3rd Move: Bishop F1 to B5
+            bishopF1.addBezierAnimation(8, 9, 
+                {x: 1.5, y: 0, z: 3.5}, 
+                {x: 1, y: 1, z: 3}, 
+                {x: -2, y: 0.25, z: 2}, 
+                {x: -2.5, y: 0, z: 2}
+            );
+        }
+        
+        
+    
+    
 
     setupBlackChessPieces() {
-        let pawnG2 = new ChessPiece("pawnG2", "pawn", {x: 2.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnG2);
-        let pawnH2 = new ChessPiece("pawnH2", "pawn", {x: 3.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnH2);
-        let pawnA2 = new ChessPiece("pawnA2", "pawn", {x: -3.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnA2);
-        let pawnB2 = new ChessPiece("pawnB2", "pawn", {x: -2.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnB2);
-        let pawnC2 = new ChessPiece("pawnC2", "pawn", {x: -1.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnC2);
-        let pawnD2 = new ChessPiece("pawnD2", "pawn", {x: -.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnD2);
-        let pawnE2 = new ChessPiece("pawnE2", "pawn", {x: .5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnE2);
-        let pawnF2 = new ChessPiece("pawnF2", "pawn", {x: 1.5, y: 0, z: 2.5});
-        this.blackChessPieces.push(pawnF2);
-        let rookH1 = new ChessPiece("rookH1", "rook", {x: 3.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(rookH1);
-        let knightG1 = new ChessPiece("knightG1", "knight", {x: 2.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(knightG1);
-        let bishopF1 = new ChessPiece("bishopF1", "bishop", {x: 1.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(bishopF1);
-        let queenE1 = new ChessPiece("queenE1", "queen", {x: .5, y: 0, z: 3.5});
-        this.blackChessPieces.push(queenE1);
-        let kingD1 = new ChessPiece("kingD1", "king", {x: -.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(kingD1);
-        let bishopC1 = new ChessPiece("bishopC1", "bishop", {x: -1.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(bishopC1);
-        let knightB1 = new ChessPiece("knightB1", "knight", {x: -2.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(knightB1);
-        let rookA1 = new ChessPiece("rookA1", "rook", {x: -3.5, y: 0, z: 3.5});
-        this.blackChessPieces.push(rookA1);
+        // Initialize pawns for rank 7
+        let pawnA7 = new ChessPiece("pawnA7", "pawn", {x: -3.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnA7);
+        let pawnB7 = new ChessPiece("pawnB7", "pawn", {x: -2.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnB7);
+        let pawnC7 = new ChessPiece("pawnC7", "pawn", {x: -1.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnC7);
+        let pawnD7 = new ChessPiece("pawnD7", "pawn", {x: -0.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnD7);
+        let pawnE7 = new ChessPiece("pawnE7", "pawn", {x: 0.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnE7);
+        let pawnF7 = new ChessPiece("pawnF7", "pawn", {x: 1.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnF7);
+        let pawnG7 = new ChessPiece("pawnG7", "pawn", {x: 2.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnG7);
+        let pawnH7 = new ChessPiece("pawnH7", "pawn", {x: 3.5, y: 0, z: -2.5});
+        this.blackChessPieces.push(pawnH7);
 
-        // add animations to the black pieces
-        // pawn F2 to F4
-        pawnF2.addBezierAnimation(3, 3.5, {x: 1.5, y: 0, z: 2.5}, {x: 1.5, y: 1, z: 1.5}, {x: 1.5, y: 1, z: 1.5}, {x: 1.5, y: 0, z: .5} , {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0});
-        // pawn F4 eliminated
-        pawnF2.addBezierAnimation(4.25, 6, {x: 1.5, y: 0, z: .5}, {x: 1.5, y: 1, z: -.5}, {x: 1.5, y: 10, z: -.5}, {x: 1.5, y: -100, z: -1.5} ,  {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0}, {x: 0, y: 0, z: 0});
-    }
+        
+        // Initialize other pieces for rank 8
+        let rookA8 = new ChessPiece("rookA8", "rook", {x: -3.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(rookA8);
+        let knightB8 = new ChessPiece("knightB8", "knight", {x: -2.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(knightB8);
+        let bishopC8 = new ChessPiece("bishopC8", "bishop", {x: -1.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(bishopC8);
+        let queenD8 = new ChessPiece("queenD8", "queen", {x: -0.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(queenD8);  // Queen on D8 for black
+        let kingE8 = new ChessPiece("kingE8", "king", {x: 0.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(kingE8);    // King on E8 for black
+        let bishopF8 = new ChessPiece("bishopF8", "bishop", {x: 1.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(bishopF8);
+        let knightG8 = new ChessPiece("knightG8", "knight", {x: 2.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(knightG8);
+        let rookH8 = new ChessPiece("rookH8", "rook", {x: 3.5, y: 0, z: -3.5});
+        this.blackChessPieces.push(rookH8);
+
+            // Black's 1st Move: Pawn E7 to E5
+            pawnE7.addBezierAnimation(2, 3, 
+                {x: 0.5, y: 0, z: -2.5}, 
+                {x: 0.5, y: 1, z: -2}, 
+                {x: 0.5, y: 0.25, z: -1}, 
+                {x: 0.5, y: 0, z: -1}
+            );
+        
+            // Black's 2nd Move: Knight B8 to C6
+            knightB8.addBezierAnimation(6, 7, 
+                {x: -2.5, y: 0, z: -3.5}, 
+                {x: -2, y: 1, z: -3}, 
+                {x: -1.5, y: 0.25, z: -2.5}, 
+                {x: -1.5, y: 0, z: -2.5}
+            );
+        
+            // Black's 3rd Move: Pawn A7 to A6
+            pawnA7.addBezierAnimation(10, 11, 
+                {x: -3.5, y: 0, z: -2.5}, 
+                {x: -3.5, y: 1, z: -2}, 
+                {x: -3.5, y: 0.25, z: -1.5}, 
+                {x: -3.5, y: 0, z: -1.5}
+            );
+        }
+        
+        
+    
+    
+        
+        
+    
 
     drawPiece(gl, shaderProgram, buffer, name, tx, ty, tz, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0, degree = 0) {
         const modelviewMatrix = mat4.create();
@@ -174,6 +227,8 @@ class ChessSet {
         // Draw White and Black pieces
         drawPieces(this.whiteChessPieces, this.whiteTexture);
         drawPieces(this.blackChessPieces, this.blackTexture);
+        // log the current time, rounded down to the nearest 1 second
+        console.log("Time:", Math.floor(currentTime));
         
     }
 
@@ -181,16 +236,25 @@ class ChessSet {
 
 
 class ChessPiece {
-    constructor(name, type, initialPosition) {
+    constructor(name, type, initialPosition, initialScale = { x: 1, y: 1, z: 1 }, initialRotation = { x: 0, y: 0, z: 0 }) {
         this.name = name;
         this.type = type;
-        this.position = initialPosition;
-        this.rotation = { x: 0, y: 0, z: 0 };
+        this.position = initialPosition;  // Expected to be an object {x, y, z}
+        this.scale = initialScale;        // Default scale is uniformly 1
+        this.rotation = initialRotation;  // Default rotation is 0 for all axes
         this.animations = [];
     }
 
-    addBezierAnimation(startT, endT, startPos, controlPos1, controlPos2, endPos, startRot, controlRot1, controlRot2, endRot) {
-        this.animations.push({ startT, endT, startPos, controlPos1, controlPos2, endPos, startRot, controlRot1, controlRot2, endRot });
+    addBezierAnimation(startT, endT, 
+        startPos, controlPos1, controlPos2, endPos, 
+        startScale = this.scale, controlScale1 = this.scale, controlScale2 = this.scale, endScale = this.scale, 
+        startRot = this.rotation, controlRot1 = this.rotation, controlRot2 = this.rotation, endRot = this.rotation) {
+        this.animations.push({
+            startT, endT,
+            startPos, controlPos1, controlPos2, endPos,
+            startScale, controlScale1, controlScale2, endScale,
+            startRot, controlRot1, controlRot2, endRot
+        });
     }
 
     addAnimation(startT, endT, startPos, endPos, startRot, endRot) {
@@ -205,6 +269,9 @@ class ChessPiece {
                 this.position.x = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startPos.x, anim.controlPos1.x, anim.controlPos2.x, anim.endPos.x);
                 this.position.y = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startPos.y, anim.controlPos1.y, anim.controlPos2.y, anim.endPos.y);
                 this.position.z = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startPos.z, anim.controlPos1.z, anim.controlPos2.z, anim.endPos.z);
+                this.scale.x = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startScale, anim.controlScale1, anim.controlScale2, anim.endScale);
+                this.scale.y = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startScale, anim.controlScale1, anim.controlScale2, anim.endScale);
+                this.scale.z = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startScale, anim.controlScale1, anim.controlScale2, anim.endScale);
                 this.rotation.x = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startRot.x, anim.controlRot1.x, anim.controlRot2.x, anim.endRot.x);
                 this.rotation.y = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startRot.y, anim.controlRot1.y, anim.controlRot2.y, anim.endRot.y);
                 this.rotation.z = this.bezierInterpolate(currentTime, anim.startT, anim.endT, anim.startRot.z, anim.controlRot1.z, anim.controlRot2.z, anim.endRot.z);
@@ -221,6 +288,9 @@ class ChessPiece {
             tx: this.position.x,
             ty: this.position.y,
             tz: this.position.z,
+            sx: this.scale.x,
+            sy: this.scale.y,
+            sz: this.scale.z,
             rx: this.rotation.x,
             ry: this.rotation.y,
             rz: this.rotation.z
@@ -229,10 +299,10 @@ class ChessPiece {
 
     bezierInterpolate(t, t0, t1, v0, v1, v2, v3) {
         let ratio = (t - t0) / (t1 - t0);
-        ratio = Math.max(0, Math.min(ratio, 1.0));
-        const v = v0 * Math.pow(1-ratio, 3) + 3 * v1 * ratio * Math.pow(1-ratio, 2) + 3 * v2 * Math.pow(ratio, 2) * (1-ratio) + v3 * Math.pow(ratio, 3);
-        return v;
+        ratio = Math.max(0, Math.min(ratio, 1)); // Clamp the ratio to [0, 1]
+        return v0 * Math.pow(1 - ratio, 3) + 3 * v1 * ratio * Math.pow(1 - ratio, 2) + 3 * v2 * Math.pow(ratio, 2) * (1 - ratio) + v3 * Math.pow(ratio, 3);
     }
+    
 }
     
 
