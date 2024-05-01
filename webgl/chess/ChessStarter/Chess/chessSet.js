@@ -56,27 +56,52 @@ class ChessSet {
         this.whiteChessPieces.push(rookH1);
 
             // White's 1st Move: Pawn E2 to E4
-            pawnE2.addBezierAnimation(0, 1, 
-                {x: 0.5, y: 0, z: 3.5}, 
-                {x: 0.5, y: 1, z: 3}, 
-                {x: 0.5, y: 0.25, z: 2}, 
-                {x: 0.5, y: 0, z: 2}
+            pawnE2.addBezierAnimation(2, 3, 
+                {x: 0.5, y: 0, z: 2.5}, 
+                {x: 0.5, y: .5, z: 3}, 
+                {x: 0.5, y: 2, z: 2}, 
+                {x: 0.5, y: 0, z: .5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
             );
         
             // White's 2nd Move: Knight G1 to F3
-            knightG1.addBezierAnimation(4, 5, 
-                {x: 3.5, y: 0, z: 3.5}, 
-                {x: 3, y: 1, z: 3}, 
-                {x: 2, y: 0.25, z: 2.5}, 
-                {x: 2, y: 0, z: 2.5}
+            knightG1.addBezierAnimation(6, 7, 
+                {x: 2.5, y: 0, z: 3.5}, 
+                {x: 2.5, y: 2, z: 3.25}, 
+                {x: 2, y: 4, z: 1.5}, 
+                {x: 1.5, y: 0, z: 1.5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: .1, y: 0, z: .25},
+                {x: 0, y: 0, z: 0},
+
             );
         
             // White's 3rd Move: Bishop F1 to B5
-            bishopF1.addBezierAnimation(8, 9, 
+            bishopF1.addBezierAnimation(10, 11, 
                 {x: 1.5, y: 0, z: 3.5}, 
-                {x: 1, y: 1, z: 3}, 
-                {x: -2, y: 0.25, z: 2}, 
-                {x: -2.5, y: 0, z: 2}
+                {x: 1.5, y: 3, z: 2}, 
+                {x: -2.5, y: 3.5, z: 2}, 
+                {x: -2.5, y: 0, z: -.5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: .1, y: 0, z: .25},
+                {x: 0, y: 0, z: 0},
+            );
+
+            // White's 4th Move: Take pawn at A6
+            bishopF1.addBezierAnimation(14, 15, 
+                {x: -2.5, y: 0, z: -.5}, 
+                {x: -2, y: 2, z: 0}, 
+                {x: -1.0, y: 3, z: 0}, 
+                {x: -3.5, y: 0, z: -1.5}, // A6
+                undefined,{x: 2, y: 2, z: 2},{x: 2, y: 2, z: 2},undefined,
             );
         }
         
@@ -115,74 +140,95 @@ class ChessSet {
         this.blackChessPieces.push(queenD8);  // Queen on D8 for black
         let kingE8 = new ChessPiece("kingE8", "king", {x: 0.5, y: 0, z: -3.5});
         this.blackChessPieces.push(kingE8);    // King on E8 for black
-        let bishopF8 = new ChessPiece("bishopF8", "bishop", {x: 1.5, y: 0, z: -3.5});
+        let bishopF8 = new ChessPiece("bishopF8", "bishop", {x: 1.5, y: 0, z: -3.5}, {x: 5, y: 1, z: 1}, {x: 0, y: 0, z: 0}, 1);
         this.blackChessPieces.push(bishopF8);
-        let knightG8 = new ChessPiece("knightG8", "knight", {x: 2.5, y: 0, z: -3.5});
+        let knightG8 = new ChessPiece("knightG8", "knight", {x: 2.5, y: 0, z: -3.5},{x: 5, y: 1, z: 1}, {x: 0, y: 0, z: 0}, 1);
         this.blackChessPieces.push(knightG8);
         let rookH8 = new ChessPiece("rookH8", "rook", {x: 3.5, y: 0, z: -3.5});
         this.blackChessPieces.push(rookH8);
 
             // Black's 1st Move: Pawn E7 to E5
-            pawnE7.addBezierAnimation(2, 3, 
+            pawnE7.addBezierAnimation(4, 4.8, 
                 {x: 0.5, y: 0, z: -2.5}, 
-                {x: 0.5, y: 1, z: -2}, 
-                {x: 0.5, y: 0.25, z: -1}, 
-                {x: 0.5, y: 0, z: -1}
+                {x: 0.75, y: 1, z: -2}, 
+                {x: 0.8, y: 0.25, z: -1}, 
+                {x: 0.5, y: 0, z: -.5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: -.1, y: 0, z: 1},
+                {x: -.2, y: 0, z: -.2},
+                {x: 0, y: 0, z: 0},
+                18
             );
         
             // Black's 2nd Move: Knight B8 to C6
-            knightB8.addBezierAnimation(6, 7, 
+            knightB8.addBezierAnimation(8, 9, 
                 {x: -2.5, y: 0, z: -3.5}, 
-                {x: -2, y: 1, z: -3}, 
-                {x: -1.5, y: 0.25, z: -2.5}, 
-                {x: -1.5, y: 0, z: -2.5}
+                {x: -2, y: 2, z: -3}, 
+                {x: -2.25, y: 1, z: -2.5}, 
+                {x: -1.5, y: 0, z: -1.5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: .1, y: 0, z: .25},
+                {x: 0, y: 0, z: 0},
             );
         
             // Black's 3rd Move: Pawn A7 to A6
-            pawnA7.addBezierAnimation(10, 11, 
-                {x: -3.5, y: 0, z: -2.5}, 
+            pawnA7.addBezierAnimation(12, 13, 
+                {x: -3.5, y: 0, z: -2.5}, // A7
                 {x: -3.5, y: 1, z: -2}, 
                 {x: -3.5, y: 0.25, z: -1.5}, 
-                {x: -3.5, y: 0, z: -1.5}
+                {x: -3.5, y: 0, z: -1.5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 0},
+                {x: .1, y: 0, z: 0},
+                {x: .1, y: 0, z: .25},
+                {x: 0, y: 0, z: 0},
             );
+
+            // pawnA7 gets knocked out
+            pawnA7.addBezierAnimation(14.95, 16.5,
+                {x: -3.5, y: 0, z: -1.5}, // A6
+                {x: -7, y: 3, z: -5}, //
+                {x: -8, y: -10, z: -5}, //
+                {x: -8, y: -60, z: -5},
+                {x: 1, y: 1, z: 1},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},{x: 0, y: 0, z: 0},
+                {x: 0, y: 0, z: 2},
+                {x: 1, y: 0, z: 0},
+                {x: 1, y: 0, z: 4},
+                {x: 0, y: 0, z: 0},
+                
+
+            )
         }
         
         
     
-    
+
+        drawPiece(gl, shaderProgram, buffer, name, tx, ty, tz, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0, degree = 0) {
+            const modelviewMatrix = mat4.create();
         
+            // Translate first
+            mat4.translate(modelviewMatrix, modelviewMatrix, [tx, ty, tz]);
         
-    
-
-    drawPiece(gl, shaderProgram, buffer, name, tx, ty, tz, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0, degree = 0) {
-        const modelviewMatrix = mat4.create();
-        mat4.translate(
-            modelviewMatrix,
-            modelviewMatrix,
-            [tx, ty, tz]
-        );
-        mat4.rotate(
-            modelviewMatrix,
-            modelviewMatrix,
-            degree * Math.PI / 180,
-            [rx, ry, rz]
-        );
-        mat4.scale(
-            modelviewMatrix,
-            modelviewMatrix,
-            [sx, sy, sz]
-        );
-        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uModelViewMatrix"), false, modelviewMatrix);
-
-        const normalMatrix = mat3.create();
-        mat3.normalFromMat4(normalMatrix, modelviewMatrix);
-        gl.uniformMatrix3fv(gl.getUniformLocation(shaderProgram, "uNormalMatrix"), false, normalMatrix);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        setShaderAttributes(gl, shaderProgram);
-        gl.drawArrays(gl.TRIANGLES, 0, buffer.vertexCount);
-    }
-
+            // Then scale
+            mat4.scale(modelviewMatrix, modelviewMatrix, [sx, sy, sz]);
+        
+            // Then rotate
+            mat4.rotate(modelviewMatrix, modelviewMatrix, degree * Math.PI / 180, [rx, ry, rz]);
+        
+            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uModelViewMatrix"), false, modelviewMatrix);
+        
+            const normalMatrix = mat3.create();
+            mat3.normalFromMat4(normalMatrix, modelviewMatrix);
+            gl.uniformMatrix3fv(gl.getUniformLocation(shaderProgram, "uNormalMatrix"), false, normalMatrix);
+        
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            setShaderAttributes(gl, shaderProgram);
+            gl.drawArrays(gl.TRIANGLES, 0, buffer.vertexCount);
+        }
+        
     // basic linear interpolation
     interpolate(t, t0, t1, v0, v1) {
         let ratio = (t-t0)/(t1-t0);
@@ -216,17 +262,17 @@ class ChessSet {
         this.drawPiece(gl, shaderProgram, this.buffers["cube"], "board", 0, 0, 0, 1,1,1, 0,0,0,0);
         
         // // draw White pieces
-        const drawPieces = (piecesArray, texture) => {
+        const drawPieces = (piecesArray, texture, degree=0) => {
             gl.bindTexture(gl.TEXTURE_2D, texture);
             for (let piece of piecesArray) {
                 const { tx, ty, tz, rx, ry, rz } = piece.getCurrentState(currentTime);
-                this.drawPiece(gl, shaderProgram, this.buffers[piece.type], piece.name, tx, ty, tz, 1, 1, 1, rx, ry, rz, 0);
+                this.drawPiece(gl, shaderProgram, this.buffers[piece.type], piece.name, tx, ty, tz, 1, 1, 1, rx, 1, rz, degree);
             }
         };
     
         // Draw White and Black pieces
-        drawPieces(this.whiteChessPieces, this.whiteTexture);
-        drawPieces(this.blackChessPieces, this.blackTexture);
+        drawPieces(this.whiteChessPieces, this.whiteTexture, 180);
+        drawPieces(this.blackChessPieces, this.blackTexture, 0);
         // log the current time, rounded down to the nearest 1 second
         console.log("Time:", Math.floor(currentTime));
         
@@ -236,29 +282,26 @@ class ChessSet {
 
 
 class ChessPiece {
-    constructor(name, type, initialPosition, initialScale = { x: 1, y: 1, z: 1 }, initialRotation = { x: 0, y: 0, z: 0 }) {
+    constructor(name, type, initialPosition, initialScale = { x: 1, y: 1, z: 1 }, initialRotation = { x: 0, y: 0, z: 0 }, degree=0) {
         this.name = name;
         this.type = type;
-        this.position = initialPosition;  // Expected to be an object {x, y, z}
-        this.scale = initialScale;        // Default scale is uniformly 1
-        this.rotation = initialRotation;  // Default rotation is 0 for all axes
+        this.position = initialPosition;  
+        this.scale = initialScale;      
+        this.rotation = initialRotation;
+        this.degree = degree;
         this.animations = [];
     }
 
     addBezierAnimation(startT, endT, 
         startPos, controlPos1, controlPos2, endPos, 
         startScale = this.scale, controlScale1 = this.scale, controlScale2 = this.scale, endScale = this.scale, 
-        startRot = this.rotation, controlRot1 = this.rotation, controlRot2 = this.rotation, endRot = this.rotation) {
+        startRot = this.rotation, controlRot1 = this.rotation, controlRot2 = this.rotation, endRot = this.rotation, degree = this.degree) {
         this.animations.push({
             startT, endT,
             startPos, controlPos1, controlPos2, endPos,
             startScale, controlScale1, controlScale2, endScale,
-            startRot, controlRot1, controlRot2, endRot
+            startRot, controlRot1, controlRot2, endRot, degree
         });
-    }
-
-    addAnimation(startT, endT, startPos, endPos, startRot, endRot) {
-        this.animations.push({ startT, endT, startPos, endPos, startRot, endRot });
     }
 
     getCurrentState(currentTime) {
@@ -278,9 +321,10 @@ class ChessPiece {
                 break;
             }
         }
-
+        // If there are no active animations, set the position, scale, and rotation to the end values of the last animation
         if (!hasActiveAnimation && this.animations.length > 0 && currentTime >= this.animations[this.animations.length - 1].endT) {
             this.position = {...this.animations[this.animations.length - 1].endPos};
+            this.scale = {...this.animations[this.animations.length - 1].endScale};
             this.rotation = {...this.animations[this.animations.length - 1].endRot};
         }
 
@@ -293,7 +337,8 @@ class ChessPiece {
             sz: this.scale.z,
             rx: this.rotation.x,
             ry: this.rotation.y,
-            rz: this.rotation.z
+            rz: this.rotation.z,
+            degree: this.degree
         };
     }
 

@@ -32,10 +32,6 @@ async function main() {
 
 	gl.activeTexture(gl.TEXTURE0);
 	gl.uniform1i(gl.getUniformLocation(shaderProgram, "uTexture"), 0);
-	// const blackTexture = loadTexture(gl, 'pieces/PiezasAjedrezDiffuseMarmolBlackBrighter.png', [80, 80, 80, 255]);
-	// const whiteTexture = loadTexture(gl, 'pieces/PiezasAjedrezDiffuseMarmol.png', [220, 220, 220, 255]);
-	// const boardTexture = loadTexture(gl, 'pieces/TableroDiffuse01.png', [255, 171, 0, 255]);
-
 
 	//
 	// load a modelview matrix and normatMatrixonto the shader
@@ -58,8 +54,7 @@ async function main() {
 	}
 	setLightDirection(0, -1, -1);
 	// setLightDirection(1, -1, -1);
-
-	const eye = [0, 6, 9];
+	const eye = [1, 8, 6];
 	const at = [0, 1.5, 2.3]
 	//const eye = [0, 10, -8];
 	//const at = [0, 0, 0];
@@ -72,7 +67,6 @@ async function main() {
 	//
 	const c = new ChessSet(gl);
 	await c.init(gl);
-	const p = new ChessPiece(gl, 0, 0, 0, 0);
 	
 	
 
@@ -146,7 +140,7 @@ function setObservationView(gl, shaderProgram, eye, at, up, canvasAspect) {
 }
 
 function setupWebGL(gl) {
-    gl.clearColor(0.75, 0.85, 0.8, 1.0);
+    gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
     gl.enable(gl.CULL_FACE);
